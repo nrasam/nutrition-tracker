@@ -1,0 +1,39 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+
+  /* outline: 1px dotted red; */
+}
+
+:root {
+  --bg: #0c1220;
+  --bg2: #121c2e;
+  --bg3: #192338;
+  --bg4: #1f2d47;
+  --border: rgba(100, 140, 200, 0.12);
+  --border2: rgba(100, 140, 200, 0.22);
+  --text: #cdd9ed;
+  --text2: #7a95ba;
+  --text3: #4e6a8c;
+  --green: #3dd68c;
+  --green-bg: rgba(61, 214, 140, 0.1);
+  --blue: #5b9cf6;
+  --blue-bg: rgba(91, 156, 246, 0.1);
+  --orange: #f0963a;
+  --orange-bg: rgba(240, 150, 58, 0.1);
+  --yellow: #f5c842;
+  --yellow-bg: rgba(245, 200, 66, 0.1);
+  --purple: #9f7aea;
+  --purple-bg: rgba(159, 122, 234, 0.1);
+  --red: #f56565;
+  --red-bg: rgba(245, 101, 101, 0.1);
+  --teal: #38bdf8;
+  --teal-bg: rgba(56, 189, 248, 0.1);
+  --mono: "JetBrains Mono", monospace;
+  --sans: "Inter", -apple-system, sans-serif;
+  --r: 8px;
+  --r-sm: 5px;
+}
