@@ -1,6 +1,11 @@
 import styles from "./dashboard.module.css";
 
-import { TODAY_INTAKE, GOALS } from "../../data/mockData";
+import {
+  TODAY_INTAKE,
+  GOALS,
+  CURRENT_WEIGHT,
+  GOAL_WEIGHT,
+} from "../../data/mockData";
 
 import Ring from "../../components/Ring";
 
@@ -16,6 +21,13 @@ export default function Dashboard() {
   // const deficit = remaining;
 
   const calorieProgress = Math.round(
+    (TODAY_INTAKE.calories / GOALS.calories) * 100,
+  );
+
+  const weightGainOrLossRate = ((remaining * 7) / 3500).toFixed(2);
+  const weightGoalDiff = CURRENT_WEIGHT - GOAL_WEIGHT;
+
+  const deficitProgress = Math.round(
     (TODAY_INTAKE.calories / GOALS.calories) * 100,
   );
 
@@ -107,16 +119,35 @@ export default function Dashboard() {
         </div>
         {/* Deficit Card */}
         <div className={`${styles.card} ${styles.deficitCard}`}>
-          <div className={styles.cardLbl}>Energy Balances</div>
+          <div className={styles.cardLbl}>⚖ Energy Balance</div>
           <div className={styles.deficitMain}>
-            <span className={styles.deficitNum}>100</span>
-            <span className={styles.deficitTag}>kcal deficit/surplus</span>
+            <span
+              className={styles.deficitNum}
+              style={{ color: remaining > 0 ? "var(--green)" : "var(--red)" }}
+            >
+              {remaining}
+            </span>
+            <span
+              className={styles.deficitTag}
+              style={{ color: remaining > 0 ? "var(--green)" : "var(--red)" }}
+            >
+              cal {remaining > 0 ? "deficit" : "surplus"}
+            </span>
           </div>
           <div className={styles.deficitDesc}>
-            At this rate you lose X lbs/week.
+            {remaining > 0
+              ? `At this rate you'll lose ~${weightGainOrLossRate} lbs/week. ${weightGoalDiff > 0 ? `${weightGoalDiff.toFixed(1)} lbs to goal.` : "At goal weight!"}`
+              : `Calorie surplus today — add an activity to stay on track.`}
           </div>
           <div className={styles.deficitBarTrack}>
-            <div className={styles.deficitBar}></div>
+            <div
+              className={styles.deficitBar}
+              style={{
+                width: `${calorieProgress}%`,
+                background:
+                  calorieProgress > 100 ? "var(--red)" : "var(--green)",
+              }}
+            ></div>
           </div>
         </div>
         {/* Weight Card */}
