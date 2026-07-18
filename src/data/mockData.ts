@@ -39,6 +39,7 @@ export interface Food {
 }
 
 const GOALS = { calories: 2100, protein: 165, carbs: 250, fat: 70, fiber: 38 };
+
 const TODAY_INTAKE = {
   calories: 1642,
   protein: 124,
@@ -47,9 +48,13 @@ const TODAY_INTAKE = {
   fiber: 18,
   water: 1800,
 };
+
 const WATER_GOAL = 2500;
+
 const CURRENT_WEIGHT = 187.4;
+
 const GOAL_WEIGHT = 172;
+
 const WEIGHT_HISTORY = [191.0, 190.2, 189.8, 189.0, 188.5, 188.1, 187.4];
 
 const MICROS: Micro[] = [

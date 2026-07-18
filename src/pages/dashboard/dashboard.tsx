@@ -1,26 +1,50 @@
 import styles from "./dashboard.module.css";
 
+import { TODAY_INTAKE, GOALS } from "../../data/mockData";
+
+import Ring from "../../components/Ring";
+
+function statusColor(p: number) {
+  if (p > 100) return "var(--red)";
+  if (p >= 75) return "var(--green)";
+  if (p >= 40) return "var(--yellow)";
+  return "var(--text3)";
+}
+
 export default function Dashboard() {
+  const remaining = GOALS.calories - TODAY_INTAKE.calories;
+  // const deficit = remaining;
+
+  const calorieProgress = Math.round(
+    (TODAY_INTAKE.calories / GOALS.calories) * 100,
+  );
+
   const macros = [
     {
       name: "Protein",
-      cur: 0,
-      goal: 0,
+      cur: TODAY_INTAKE.protein,
+      goal: GOALS.protein,
       unit: "g",
       color: "var(--green)",
     },
     {
       name: "Carbs",
-      cur: 0,
-      goal: 0,
+      cur: TODAY_INTAKE.carbs,
+      goal: GOALS.carbs,
       unit: "g",
       color: "var(--blue)",
     },
-    { name: "Fat", cur: 0, goal: 0, unit: "g", color: "var(--orange)" },
+    {
+      name: "Fat",
+      cur: TODAY_INTAKE.fat,
+      goal: GOALS.fat,
+      unit: "g",
+      color: "var(--orange)",
+    },
     {
       name: "Fiber",
-      cur: 0,
-      goal: 0,
+      cur: TODAY_INTAKE.fiber,
+      goal: GOALS.fiber,
       unit: "g",
       color: "var(--purple)",
     },
@@ -32,10 +56,16 @@ export default function Dashboard() {
         {/* Calorie Card */}
         <div className={`${styles.card} ${styles.calCard}`}>
           <div className={styles.ringWrap}>
-            {/* Ring */}
+            <Ring
+              value={TODAY_INTAKE.calories}
+              max={GOALS.calories}
+              color="var(--yellow)"
+            />
             <div className={styles.ringCenter}>
-              <span className={styles.ringNum}>100</span>
-              <span className={styles.ringSub}>kcal</span>
+              <span className={styles.ringNum}>
+                {TODAY_INTAKE.calories.toLocaleString()}
+              </span>
+              <span className={styles.ringSub}>cal</span>
             </div>
           </div>
           {/* Calorie stats */}
@@ -43,19 +73,35 @@ export default function Dashboard() {
             <div className={styles.cardLbl}>Calories Today</div>
             <div className={styles.calRow}>
               <span className={styles.calRowLbl}>Goal</span>
-              <span className={styles.calRowVal}>100</span>
+              <span className={styles.calRowVal}>
+                {GOALS.calories.toLocaleString()}
+              </span>
             </div>
             <div className={styles.calRow}>
               <span className={styles.calRowLbl}>Consumed</span>
-              <span className={styles.calRowVal}>100</span>
+              <span className={styles.calRowVal}>
+                {TODAY_INTAKE.calories.toLocaleString()}
+              </span>
             </div>
             <div className={styles.calRow}>
               <span className={styles.calRowLbl}>Remaining</span>
-              <span className={styles.calRowVal}>100</span>
+              <span
+                className={styles.calRowVal}
+                style={{
+                  color: remaining >= 0 ? "var(--green)" : "var(--red)",
+                }}
+              >
+                {remaining}
+              </span>
             </div>
             <div className={styles.calRow}>
               <span className={styles.calRowLbl}>Progress</span>
-              <span className={styles.calRowVal}>100</span>
+              <span
+                className={styles.calRowVal}
+                style={{ color: statusColor(calorieProgress) }}
+              >
+                {calorieProgress}%
+              </span>
             </div>
           </div>
         </div>
