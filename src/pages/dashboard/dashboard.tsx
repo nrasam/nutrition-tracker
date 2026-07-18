@@ -5,6 +5,7 @@ import {
   GOALS,
   CURRENT_WEIGHT,
   GOAL_WEIGHT,
+  WEIGHT_HISTORY,
 } from "../../data/mockData";
 
 import Ring from "../../components/Ring";
@@ -18,7 +19,6 @@ function statusColor(p: number) {
 
 export default function Dashboard() {
   const remaining = GOALS.calories - TODAY_INTAKE.calories;
-  // const deficit = remaining;
 
   const calorieProgress = Math.round(
     (TODAY_INTAKE.calories / GOALS.calories) * 100,
@@ -27,9 +27,9 @@ export default function Dashboard() {
   const weightGainOrLossRate = ((remaining * 7) / 3500).toFixed(2);
   const weightGoalDiff = CURRENT_WEIGHT - GOAL_WEIGHT;
 
-  const deficitProgress = Math.round(
-    (TODAY_INTAKE.calories / GOALS.calories) * 100,
-  );
+  const weightMin = Math.min(...WEIGHT_HISTORY);
+  const weightMax = Math.max(...WEIGHT_HISTORY);
+  const weightRange = weightMax - weightMin || 1;
 
   const macros = [
     {
@@ -155,14 +155,29 @@ export default function Dashboard() {
           <div className={styles.cardLbl}>Weight Tracking</div>
           <div className={styles.wtBody}>
             <div className={styles.wtMain}>
-              <div>
-                <span className={styles.wtVal}>150</span>
+              <div className={styles.wtCurrWeight}>
+                <span className={styles.wtVal}>{CURRENT_WEIGHT}</span>
                 <span className={styles.wtUnit}>lbs</span>
               </div>
-              <div className={styles.wtGoal}>Goal: 145 lbs</div>
-              <div>▼ 5 lbs lost</div>
+              <div className={styles.wtGoal}>Goal: {GOAL_WEIGHT} lbs</div>
+              <div className={styles.wtDelta}>
+                ▼ {(WEIGHT_HISTORY[0] - CURRENT_WEIGHT).toFixed(1)} lbs lost
+              </div>
             </div>
-            <div className={styles.sparkline}></div>
+            <div className={styles.sparkline}>
+              {WEIGHT_HISTORY.map((weight, idx) => {
+                // maps weight to a 0–1 range: the lightest weight becomes 0, the heaviest becomes 1
+                // scale it by 28 pixels and add a min of 10 pixels
+                const height = ((weight - weightMin) / weightRange) * 28 + 10;
+                return (
+                  <div
+                    key={idx}
+                    className={`${styles.spark} ${idx === WEIGHT_HISTORY.length - 1 ? styles.last : ""}`}
+                    style={{ height: `${height}px` }}
+                  />
+                );
+              })}
+            </div>
           </div>
         </div>
 
