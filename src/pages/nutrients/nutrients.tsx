@@ -1,36 +1,65 @@
 import styles from "./nutrients.module.css";
 
+import {
+  TODAY_INTAKE,
+  GOALS,
+  CURRENT_WEIGHT,
+  GOAL_WEIGHT,
+  WEIGHT_HISTORY,
+  MICROS,
+} from "../../data/mockData";
+
+import { statusColor, formatMicro } from "../pagesHelpers";
+
 export default function Nutrients() {
   return (
     <div className={styles.splitLayout}>
       {/* Left side */}
-      <div>
+      <div className={styles.splitLeft}>
         {/* Toolbar */}
-        <div>
-          <input type="text" />
-          <select name="" id="">
-            <option value="All"></option>
-            <option value="Vitamins"></option>
-            <option value="Minerals"></option>
-            <option value="Fats"></option>
+        <div className={styles.toolbar}>
+          <input
+            className={styles.search}
+            placeholder="Search micronutrients"
+            type="text"
+          />
+          <select className={styles.fsel} name="" id="">
+            <option value="All">All</option>
+            <option value="Vitamins">Vitamins</option>
+            <option value="Minerals">Minerals</option>
+            <option value="Fats">Fats</option>
           </select>
         </div>
         {/* Scrollable list */}
-        <div>
-          <div>
+        <div className={styles.scrollable}>
+          <div className={styles.microList}>
             {/* one per nutrient */}
-            <div>
-              <div>
-                <span>name</span>
-                <span>category</span>
-              </div>
-              <div>
-                <div>
-                  <div></div>
+            {MICROS.map((micro) => {
+              const p = (micro.current / micro.goal) * 100;
+              const color = statusColor(p);
+              return (
+                <div key={micro.id} className={`${styles.microRow}`}>
+                  <div className={styles.microRowTop}>
+                    <span className={styles.microRowName}>{micro.name}</span>
+                    <span className={styles.microCatBadge}>
+                      {micro.category}
+                    </span>
+                  </div>
+                  <div className={styles.microBarRow}>
+                    <div className={styles.microBarTrack}>
+                      <div
+                        className={styles.microBarFill}
+                        style={{ width: `${p}%`, background: color }}
+                      />
+                    </div>
+                    <span className={styles.microVals}>
+                      {formatMicro(micro.current)} / {formatMicro(micro.goal)}{" "}
+                      {micro.unit}
+                    </span>
+                  </div>
                 </div>
-                <span>out of goal</span>
-              </div>
-            </div>
+              );
+            })}
           </div>
         </div>
       </div>
