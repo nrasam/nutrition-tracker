@@ -41,10 +41,10 @@ export default function Layout() {
           <div className="weight-badge">
             <div className="weight-badge-lbl">Current Weight</div>
             <div>
-              <span className="weight-badge-val">150</span>
+              <span className="weight-badge-val">146</span>
               <span className="weight-badge-unit">lbs</span>
             </div>
-            <div className="weight-badge-goal">Goal: 145 lbs</div>
+            <div className="weight-badge-goal">Goal: 140 lbs</div>
           </div>
         </div>
       </aside>

@@ -6,6 +6,7 @@ import {
   CURRENT_WEIGHT,
   GOAL_WEIGHT,
   WEIGHT_HISTORY,
+  MICROS,
 } from "../../data/mockData";
 
 import Ring from "../../components/Ring";
@@ -15,6 +16,12 @@ function statusColor(p: number) {
   if (p >= 75) return "var(--green)";
   if (p >= 40) return "var(--yellow)";
   return "var(--text3)";
+}
+
+// If the micro value is a whole number return as is, otherwise round to one decimal point
+// Keeps values that should be whole numbers whole numbers
+function formatMicro(n: number) {
+  return n % 1 === 0 ? n.toString() : n.toFixed(1);
 }
 
 export default function Dashboard() {
@@ -61,6 +68,8 @@ export default function Dashboard() {
       color: "var(--purple)",
     },
   ];
+
+  const dashMicros = MICROS.slice(0, 6);
 
   return (
     <div className={styles.pageInner}>
@@ -220,19 +229,36 @@ export default function Dashboard() {
       </div>
       {/* Key Micros */}
       <div className={styles.sectionLbl}>
-        Key Micronutrients - <span>view all</span>
+        Key Micronutrients -{" "}
+        <span style={{ color: "var(--blue)", cursor: "pointer" }}>
+          view all →
+        </span>
       </div>
       <div className={styles.microsDashGrid}>
-        <div className={styles.mdCard}>
-          <div className={styles.mdName}>
-            <span>nutrient name</span>
-            <span className={styles.mdPct}>%</span>
-          </div>
-          <div className={styles.mdTrack}>
-            <div className={styles.mdFill}></div>
-          </div>
-          <div className={styles.mdVals}></div>
-        </div>
+        {dashMicros.map((micro) => {
+          const p = Math.round((micro.current / micro.goal) * 100);
+          const color = statusColor(p);
+          return (
+            <div key={micro.id} className={styles.mdCard}>
+              <div className={styles.mdName}>
+                <span>{micro.name}</span>
+                <span className={styles.mdPct} style={{ color }}>
+                  {p}%
+                </span>
+              </div>
+              <div className={styles.mdTrack}>
+                <div
+                  className={styles.mdFill}
+                  style={{ width: `${p}%`, background: color }}
+                />
+              </div>
+              <div className={styles.mdVals}>
+                {formatMicro(micro.current)} / {formatMicro(micro.goal)}{" "}
+                {micro.unit}
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
