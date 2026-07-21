@@ -51,11 +51,11 @@ const TODAY_INTAKE = {
 
 const WATER_GOAL = 2500;
 
-const CURRENT_WEIGHT = 187.4;
+const CURRENT_WEIGHT = 146.6;
 
-const GOAL_WEIGHT = 172;
+const GOAL_WEIGHT = 140;
 
-const WEIGHT_HISTORY = [191.0, 190.2, 189.8, 189.0, 188.5, 188.1, 187.4];
+const WEIGHT_HISTORY = [185.0, 175.2, 170.8, 165.0, 160.5, 155.1, 146.6];
 
 const MICROS: Micro[] = [
   {

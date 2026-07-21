@@ -174,7 +174,7 @@ export default function Dashboard() {
                     key={idx}
                     className={`${styles.spark} ${idx === WEIGHT_HISTORY.length - 1 ? styles.last : ""}`}
                     style={{ height: `${height}px` }}
-                  />
+                  ><span className={styles.sparkTxt}>{weight} lbs</span></div>
                 );
               })}
             </div>

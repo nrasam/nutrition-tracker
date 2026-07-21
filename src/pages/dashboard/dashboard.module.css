@@ -195,6 +195,16 @@
   background: var(--bg4);
   min-width: 7px;
   transition: background 0.2s;
+  position: relative;
+}
+
+.sparkTxt {
+  font-size: 0.6rem;
+  font-family: var(--mono);
+  position: absolute;
+  bottom: -15px;
+  text-align: center;
+  width: 100%;
 }
 
 .spark.last {
