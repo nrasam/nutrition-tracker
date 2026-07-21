@@ -38,11 +38,11 @@ export interface Food {
   warnings: string[];
 }
 
-const GOALS = { calories: 2100, protein: 165, carbs: 250, fat: 70, fiber: 38 };
+const GOALS = { calories: 2100, protein: 120, carbs: 250, fat: 70, fiber: 38 };
 
 const TODAY_INTAKE = {
   calories: 1642,
-  protein: 124,
+  protein: 80,
   carbs: 198,
   fat: 52,
   fiber: 18,

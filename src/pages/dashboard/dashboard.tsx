@@ -174,50 +174,64 @@ export default function Dashboard() {
                     key={idx}
                     className={`${styles.spark} ${idx === WEIGHT_HISTORY.length - 1 ? styles.last : ""}`}
                     style={{ height: `${height}px` }}
-                  ><span className={styles.sparkTxt}>{weight} lbs</span></div>
+                  >
+                    <span className={styles.sparkTxt}>{weight} lbs</span>
+                  </div>
                 );
               })}
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Macro Bars */}
-        <div className={styles.macrosRow}>
-          {macros.map((m) => {
-            return (
-              <div key={m.name} className={styles.macroCard}>
-                <div className={styles.macroName}>{m.name}</div>
-                <div className={styles.macroVals}>
-                  <span className={styles.macroCur}>{m.cur}</span>
-                  <span className={styles.macroUnit}>{m.unit}</span>
-                  <span className={styles.macroGoalTxt}>
-                    / {m.goal}
-                    {m.unit}
-                  </span>
-                </div>
-                <div className={styles.macroTrack}>
-                  <div className={styles.macroFill}></div>
-                </div>
-                <div className={styles.macroPot}>{}%</div>
+      {/* Macro Bars */}
+      <div className={styles.macrosRow}>
+        {macros.map((m) => {
+          const p = Math.round((m.cur / m.goal) * 100);
+          return (
+            <div key={m.name} className={styles.macroCard}>
+              <div className={styles.macroName}>{m.name}</div>
+              <div className={styles.macroVals}>
+                <span className={styles.macroCur}>{m.cur}</span>
+                <span className={styles.macroUnit}>{m.unit}</span>
+                <span className={styles.macroGoalTxt}>
+                  / {m.goal}
+                  {m.unit}
+                </span>
               </div>
-            );
-          })}
-        </div>
-        {/* Key Micros */}
-        <div className={styles.sectionLbl}>
-          Key Micronutrients - <span>view all</span>
-        </div>
-        <div className={styles.microsDashGrid}>
-          <div className={styles.mdCard}>
-            <div className={styles.mdName}>
-              <span>nutrient name</span>
-              <span className={styles.mdPct}>%</span>
+              <div className={styles.macroTrack}>
+                <div
+                  className={styles.macroFill}
+                  style={{
+                    width: `${p}%`,
+                    background: p > 100 ? "var(--red)" : m.color,
+                  }}
+                ></div>
+              </div>
+              <div
+                className={styles.macroPct}
+                style={{ color: statusColor(p) }}
+              >
+                {p}%
+              </div>
             </div>
-            <div className={styles.mdTrack}>
-              <div className={styles.mdFill}></div>
-            </div>
-            <div className={styles.mdVals}></div>
+          );
+        })}
+      </div>
+      {/* Key Micros */}
+      <div className={styles.sectionLbl}>
+        Key Micronutrients - <span>view all</span>
+      </div>
+      <div className={styles.microsDashGrid}>
+        <div className={styles.mdCard}>
+          <div className={styles.mdName}>
+            <span>nutrient name</span>
+            <span className={styles.mdPct}>%</span>
           </div>
+          <div className={styles.mdTrack}>
+            <div className={styles.mdFill}></div>
+          </div>
+          <div className={styles.mdVals}></div>
         </div>
       </div>
     </div>
