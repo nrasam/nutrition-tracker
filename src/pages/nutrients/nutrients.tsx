@@ -64,61 +64,67 @@ export default function Nutrients() {
         </div>
       </div>
       {/* Right side */}
-      <div>
+      <div className={`${styles.splitRight} ${styles.w360}`}>
         {/* If selected */}
-        <div>
-          <div>name</div>
-          <div>
-            <div>
-              <div>Current</div>
-              <div>
-                <span>unit</span>
+        <div className={styles.panelHd}>
+          <div className={styles.panelTitle}>name</div>
+          <div className={styles.panelStatsRow}>
+            <div className={styles.pstat}>
+              <div className={styles.pstatLbl}>Current</div>
+              <div className={styles.pstatVal}>
+                # <span className={styles.pstatUnit}>unit</span>
               </div>
             </div>
-            <div>
-              <div>Goal</div>
-              <div>
-                <span>unit</span>
+            <div className={styles.pstat}>
+              <div className={styles.pstatLbl}>Goal</div>
+              <div className={styles.pstatVal}>
+                # <span className={styles.pstatUnit}>unit</span>
               </div>
             </div>
-            {/* If max */}
-            <div>
-              <div>Upper Limits</div>
-              <div>
-                <span>unit</span>
+            {/* If max exists*/}
+            <div className={styles.pstat}>
+              <div className={styles.pstatLbl}>Upper Limits</div>
+              <div className={styles.pstatVal}>
+                # <span className={styles.pstatUnit}>unit</span>
               </div>
             </div>
           </div>
         </div>
         {/* Panel prog */}
-        <div>
-          <div>
-            <div></div>
+        <div className={styles.panelProg}>
+          <div className={styles.panelTrack}>
+            <div className={styles.panelFill} />
           </div>
-          <div>
+          <div className={styles.panelBarLbls}>
             <span>0</span>
             <span>% of goal</span>
-            <span>goal unit</span>
+            <span># unit</span>
           </div>
         </div>
         {/* Panel body */}
-        <div>
-          <div>Best food sources (per serving, highest first)</div>
-          {/* Food sources */}
-          <div>
-            <span>#</span>
-            <span>food</span>
-            <div>
-              <div>
-                <div></div>
-              </div>
-            </div>
-            <span>unit</span>
+        <div className={styles.panelBody}>
+          <div className={styles.panelSecLbl}>
+            Best food sources (per serving, highest first)
           </div>
+          {/* Food sources */}
+          {MICROS[0].sources
+            .sort((a, b) => b.amount - a.amount)
+            .map((source, i) => (
+              <div className={styles.sourceRow}>
+                <span className={styles.srcRank}>#{i + 1}</span>
+                <span className={styles.srcName}>{source.food}</span>
+                <div className={styles.srcBarWrap}>
+                  <div className={styles.srcBarTrack}>
+                    <div className={styles.srcBarFill} />
+                  </div>
+                </div>
+                <span className={styles.srcVal}>unit</span>
+              </div>
+            ))}
         </div>
         {/* OR if empty */}
-        <div>
-          <div>🔬</div>
+        <div className={styles.panelEmpty}>
+          <div className={styles.panelEmptyIcon}>🔬</div>
           <div>
             Select a micronutrient to see food sources ranked highest to lowest
           </div>
