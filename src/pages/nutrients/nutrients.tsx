@@ -24,6 +24,15 @@ export default function Nutrients() {
     ? Math.round((selected.current / selected.goal) * 100)
     : 0;
 
+  const [search, setSearch] = useState("");
+
+  const filtered = MICROS.filter((micro) => {
+    const matchSearch = micro.name
+      .toLocaleLowerCase()
+      .includes(search.toLocaleLowerCase());
+    return matchSearch;
+  });
+
   return (
     <div className={styles.splitLayout}>
       {/* Left side */}
@@ -32,8 +41,10 @@ export default function Nutrients() {
         <div className={styles.toolbar}>
           <input
             className={styles.search}
-            placeholder="Search micronutrients"
+            placeholder="Search for micronutrients"
             type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
           />
           <select className={styles.fsel} name="" id="">
             <option value="All">All</option>
@@ -45,8 +56,13 @@ export default function Nutrients() {
         {/* Scrollable list */}
         <div className={styles.scrollable}>
           <div className={styles.microList}>
+            {filtered.length === 0 && (
+              <div className={styles.emptyList}>
+                No micronutrients match your filters
+              </div>
+            )}
             {/* one per nutrient */}
-            {MICROS.map((micro) => {
+            {filtered.map((micro) => {
               const p = (micro.current / micro.goal) * 100;
               const color = statusColor(p);
               return (

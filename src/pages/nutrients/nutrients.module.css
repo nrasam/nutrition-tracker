@@ -51,6 +51,14 @@
   transition: border-color 0.15s;
 }
 
+.emptyList {
+  text-align: center;
+  color: var(--text3);
+  padding: 40px;
+  font-family: var(--mono);
+  font-size: 13px;
+}
+
 .srch:focus {
   border-color: var(--blue);
 }
