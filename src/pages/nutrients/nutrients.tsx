@@ -25,12 +25,14 @@ export default function Nutrients() {
     : 0;
 
   const [search, setSearch] = useState("");
+  const [catFilter, setCatFilter] = useState<string>("All");
 
   const filtered = MICROS.filter((micro) => {
     const matchSearch = micro.name
       .toLocaleLowerCase()
       .includes(search.toLocaleLowerCase());
-    return matchSearch;
+    const matchCat = catFilter === "All" || micro.category === catFilter;
+    return matchSearch && matchCat;
   });
 
   return (
@@ -46,7 +48,13 @@ export default function Nutrients() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-          <select className={styles.fsel} name="" id="">
+          <select
+            className={styles.fsel}
+            name=""
+            id=""
+            value={catFilter}
+            onChange={(e) => setCatFilter(e.target.value)}
+          >
             <option value="All">All</option>
             <option value="Vitamins">Vitamins</option>
             <option value="Minerals">Minerals</option>
