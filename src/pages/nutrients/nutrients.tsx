@@ -26,13 +26,15 @@ export default function Nutrients() {
 
   const [search, setSearch] = useState("");
   const [catFilter, setCatFilter] = useState<string>("All");
+  const [unmetOnly, setUnmetOnly] = useState(false);
 
   const filtered = MICROS.filter((micro) => {
     const matchSearch = micro.name
       .toLocaleLowerCase()
       .includes(search.toLocaleLowerCase());
     const matchCat = catFilter === "All" || micro.category === catFilter;
-    return matchSearch && matchCat;
+    const matchUnmet = !unmetOnly || micro.current / micro.goal < 1;
+    return matchSearch && matchCat && matchUnmet;
   });
 
   return (
@@ -60,6 +62,12 @@ export default function Nutrients() {
             <option value="Minerals">Minerals</option>
             <option value="Fats">Fats</option>
           </select>
+          <button
+            className={`${styles.toggleBtn} ${unmetOnly ? styles.active : ""}`}
+            onClick={() => setUnmetOnly((prev) => !prev)}
+          >
+            Unmet goals
+          </button>
         </div>
         {/* Scrollable list */}
         <div className={styles.scrollable}>

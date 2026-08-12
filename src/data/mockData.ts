@@ -62,7 +62,7 @@ const MICROS: Micro[] = [
     id: "vitamin-d",
     name: "Vitamin D",
     unit: "IU",
-    current: 380,
+    current: 800,
     goal: 800,
     max: 4000,
     category: "Vitamins",
