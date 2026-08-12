@@ -178,19 +178,24 @@
   padding: 18px 20px 14px;
   border-bottom: 1px solid var(--border);
 }
+
 .panelTitle {
-  font-size: 15px;
+  font-size: 1.25rem;
   font-weight: 600;
   color: var(--text);
   margin-bottom: 12px;
+  font-family: var(--mono);
 }
+
 .panelStatsRow {
   display: flex;
   gap: 12px;
 }
+
 .pstat {
   flex: 1;
 }
+
 .pstatLbl {
   font-size: 10px;
   text-transform: uppercase;
@@ -199,12 +204,14 @@
   font-family: var(--mono);
   margin-bottom: 3px;
 }
+
 .pstatVal {
   font-family: var(--mono);
   font-size: 1.25rem;
   font-weight: 600;
   color: var(--text);
 }
+
 .pstatUnit {
   font-size: 10px;
   color: var(--text2);
@@ -339,4 +346,36 @@
   background: var(--blue-bg);
   border-color: var(--blue);
   color: var(--blue);
+}
+
+.sortBar {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  padding-right: 28px;
+}
+
+.sortBtn {
+  padding: 4px 9px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-family: var(--mono);
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: none;
+  color: var(--text3);
+  transition: all 0.15s;
+
+  &:hover {
+    color: var(--text);
+    border-color: var(--border2);
+  }
+}
+
+.sortBtn.active {
+  color: var(--yellow);
+  border-color: var(--yellow);
+  background: var(--yellow-bg);
 }

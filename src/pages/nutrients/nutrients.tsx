@@ -27,8 +27,9 @@ export default function Nutrients() {
   const [search, setSearch] = useState("");
   const [catFilter, setCatFilter] = useState<string>("All");
   const [unmetOnly, setUnmetOnly] = useState(false);
+  const [sortBy, setSortBy] = useState<"desc" | "asc" | "name">("name");
 
-  const filtered = MICROS.filter((micro) => {
+  let nutrients = MICROS.filter((micro) => {
     const matchSearch = micro.name
       .toLocaleLowerCase()
       .includes(search.toLocaleLowerCase());
@@ -36,6 +37,20 @@ export default function Nutrients() {
     const matchUnmet = !unmetOnly || micro.current / micro.goal < 1;
     return matchSearch && matchCat && matchUnmet;
   });
+
+  switch (sortBy) {
+    case "name":
+      nutrients.sort((a, b) => a.name.localeCompare(b.name));
+      break;
+    case "desc":
+      nutrients.sort((a, b) => b.current / b.goal - a.current / a.goal);
+      break;
+    case "asc":
+      nutrients.sort((a, b) => a.current / a.goal - b.current / b.goal);
+      break;
+    default:
+      nutrients.sort((a, b) => b.current / b.goal - a.current / a.goal);
+  }
 
   return (
     <div className={styles.splitLayout}>
@@ -69,16 +84,34 @@ export default function Nutrients() {
             Unmet goals
           </button>
         </div>
+        {/* Sort Buttons */}
+        <div className={styles.sortBar}>
+          {(
+            [
+              ["name", "Name (A–Z)"],
+              ["asc", "% Low → High"],
+              ["desc", "% High → Low"],
+            ] as [string, string][]
+          ).map(([key, label]) => (
+            <button
+              key={key}
+              className={`${styles.sortBtn} ${sortBy === key ? styles.active : ""}`}
+              onClick={() => setSortBy(key as "name" | "desc" | "asc")}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
         {/* Scrollable list */}
         <div className={styles.scrollable}>
           <div className={styles.microList}>
-            {filtered.length === 0 && (
+            {nutrients.length === 0 && (
               <div className={styles.emptyList}>
                 No micronutrients match your filters
               </div>
             )}
             {/* one per nutrient */}
-            {filtered.map((micro) => {
+            {nutrients.map((micro) => {
               const p = (micro.current / micro.goal) * 100;
               const color = statusColor(p);
               return (
@@ -188,7 +221,7 @@ export default function Nutrients() {
                 Best food sources (per serving, highest first)
               </div>
               {/* Food sources */}
-              {selected.sources
+              {[...selected.sources]
                 .sort((a, b) => b.amount - a.amount)
                 .map((source, i) => (
                   <div key={i} className={styles.sourceRow}>
