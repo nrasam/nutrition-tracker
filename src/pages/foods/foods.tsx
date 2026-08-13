@@ -3,7 +3,7 @@ import sharedStyles from "../shared.module.css";
 
 import type { Food } from "../../types";
 import { INITIAL_FOODS } from "../../data/mockData";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { statusColor, formatMicro } from "../pagesHelpers";
 
 type SortKey = "name" | "calories" | "protein" | "carbs" | "fat" | "fiber";
@@ -12,8 +12,21 @@ export default function Foods() {
   const [foods, setFoods] = useState<Food[]>(INITIAL_FOODS);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [stockFilter, setStockFilter] = useState(false);
+  const [search, setSearch] = useState("");
 
-  const sorted = [...foods].sort((a, b) => a.name.localeCompare(b.name));
+  const sorted = useMemo(() => {
+    let list = foods.filter((food) => {
+      const matchSearch = food.name
+        .toLocaleLowerCase()
+        .includes(search.toLocaleLowerCase());
+
+      return matchSearch;
+    });
+
+    list = [...list].sort((a, b) => a.name.localeCompare(b.name));
+
+    return list;
+  }, [foods, search]);
 
   const selected = foods.find((food) => food.id === selectedId) ?? null;
 
@@ -29,6 +42,8 @@ export default function Foods() {
               className={sharedStyles.search}
               type="text"
               placeholder="Search foods"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
             />
             <select className={sharedStyles.fsel} name="" id="">
               <option value=""></option>
@@ -59,7 +74,10 @@ export default function Foods() {
             ))}
           </div>
           {/* List */}
-          <div className={sharedStyles.scrollable} style={{ paddingRight: "28px" }}>
+          <div
+            className={sharedStyles.scrollable}
+            style={{ paddingRight: "28px" }}
+          >
             <div className={styles.foodList}>
               {sorted.map((food) => (
                 <div
