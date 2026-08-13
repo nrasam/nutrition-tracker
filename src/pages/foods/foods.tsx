@@ -221,96 +221,88 @@ export default function Foods() {
                     <div className={styles.macroTileLbl}>fiber</div>
                   </div>
                 </div>
-                {/* Panel body */}
-                <div className={styles.panelBody}>
-                  {/* If food has nutrients */}
-                  {selected.nutrients.length > 0 && (
-                    <>
-                      <div className={styles.foodSectionLbl}>
-                        Micronutrients
-                      </div>
-                      <div className={styles.nutrientList}>
-                        {/* Per nutrient */}
-                        {selected.nutrients.map((nut) => {
-                          const max = nut.dailyMax ?? nut.value * 2;
-                          const percent = Math.min(
-                            100,
-                            (nut.value / max) * 100,
-                          );
-                          return (
-                            <div
-                              key={nut.label}
-                              className={styles.nutrientItem}
-                            >
-                              <span className={styles.nutrientLbl}>
-                                {nut.label}
-                              </span>
-                              <div className={styles.nutrientTrack}>
-                                <div
-                                  className={styles.nutrientFill}
-                                  style={{ width: `${percent}%` }}
-                                />
-                              </div>
-                              <span className={styles.nutrientVal}>
-                                {formatMicro(nut.value)} {nut.unit}
-                              </span>
+              </div>
+              {/* Panel body */}
+              <div className={sharedStyles.panelBody}>
+                {/* If food has nutrients */}
+                {selected.nutrients.length > 0 && (
+                  <>
+                    <div className={styles.foodSectionLbl}>Micronutrients</div>
+                    <div className={styles.nutrientList}>
+                      {/* Per nutrient */}
+                      {selected.nutrients.map((nut) => {
+                        const max = nut.dailyMax ?? nut.value * 2;
+                        const percent = Math.min(100, (nut.value / max) * 100);
+                        return (
+                          <div key={nut.label} className={styles.nutrientItem}>
+                            <span className={styles.nutrientLbl}>
+                              {nut.label}
+                            </span>
+                            <div className={styles.nutrientTrack}>
+                              <div
+                                className={styles.nutrientFill}
+                                style={{ width: `${percent}%` }}
+                              />
                             </div>
-                          );
-                        })}
+                            <span className={styles.nutrientVal}>
+                              {formatMicro(nut.value)} {nut.unit}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </>
+                )}
+                {/* Benefits */}
+                {selected.benefits.length > 0 && (
+                  <>
+                    <div
+                      className={styles.foodSectionLbl}
+                      style={{ marginTop: "16px" }}
+                    >
+                      Benfits
+                    </div>
+                    {/* If food has benefits; one per benefit */}
+                    {selected.benefits.map((ben, i) => (
+                      <div key={i} className={styles.benefitItem}>
+                        <span className={styles.benefitDot}>✦</span>
+                        <span>{ben}</span>
                       </div>
-                    </>
+                    ))}
+                  </>
+                )}
+                {/* Warnings */}
+                {selected.warnings.length > 0 && (
+                  <>
+                    <div
+                      className={styles.foodSectionLbl}
+                      style={{ marginTop: "16px" }}
+                    >
+                      Warnings
+                    </div>
+                    {/* If food has warnings; one per warning */}
+                    {selected.warnings.map((warn, i) => (
+                      <div key={i} className={styles.warnItem}>
+                        <span className={styles.warnDot}>⚠</span>
+                        <span>{warn}</span>
+                      </div>
+                    ))}
+                  </>
+                )}
+                {/* If no nutrients or benefits */}
+                {selected.nutrients.length === 0 &&
+                  selected.benefits.length === 0 && (
+                    <div
+                      style={{
+                        color: "var(--text3)",
+                        fontSize: "12px",
+                        fontFamily: "var(--mono)",
+                        padding: "16px 0",
+                      }}
+                    >
+                      No detailed nutrition data for this food.
+                    </div>
                   )}
-                  {/* Benefits */}
-                  {selected.benefits.length > 0 && (
-                    <>
-                      <div
-                        className={styles.foodSectionLbl}
-                        style={{ marginTop: "16px" }}
-                      >
-                        Benfits
-                      </div>
-                      {/* If food has benefits; one per benefit */}
-                      {selected.benefits.map((ben, i) => (
-                        <div key={i} className={styles.benefitItem}>
-                          <span className={styles.benefitDot}>✦</span>
-                          <span>{ben}</span>
-                        </div>
-                      ))}
-                    </>
-                  )}
-                  {/* Warnings */}
-                  {selected.warnings.length > 0 && (
-                    <>
-                      <div
-                        className={styles.foodSectionLbl}
-                        style={{ marginTop: "16px" }}
-                      >
-                        Warnings
-                      </div>
-                      {/* If food has warnings; one per warning */}
-                      {selected.warnings.map((warn, i) => (
-                        <div key={i} className={styles.warnItem}>
-                          <span className={styles.warnDot}>⚠</span>
-                          <span>{warn}</span>
-                        </div>
-                      ))}
-                    </>
-                  )}
-                  {/* If no nutrients or benefits */}
-                  {selected.nutrients.length === 0 &&
-                    selected.benefits.length === 0 && (
-                      <div
-                        style={{
-                          color: "var(--text3)",
-                          fontSize: "12px",
-                          fontFamily: "var(--mono)",
-                          padding: "16px 0",
-                        }}
-                      >
-                        No detailed nutrition data for this food.
-                      </div>
-                    )}
-                </div>
               </div>
             </>
           ) : (
