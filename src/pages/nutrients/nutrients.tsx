@@ -1,4 +1,5 @@
 import styles from "./nutrients.module.css";
+import sharedStyles from "../shared.module.css";
 
 import {
   TODAY_INTAKE,
@@ -53,20 +54,20 @@ export default function Nutrients() {
   }
 
   return (
-    <div className={styles.splitLayout}>
+    <div className={sharedStyles.splitLayout}>
       {/* Left side */}
-      <div className={styles.splitLeft}>
+      <div className={sharedStyles.splitLeft}>
         {/* Toolbar */}
-        <div className={styles.toolbar}>
+        <div className={sharedStyles.toolbar}>
           <input
-            className={styles.search}
+            className={sharedStyles.search}
             placeholder="Search for micronutrients"
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
           <select
-            className={styles.fsel}
+            className={sharedStyles.fsel}
             name=""
             id=""
             value={catFilter}
@@ -78,14 +79,14 @@ export default function Nutrients() {
             <option value="Fats">Fats</option>
           </select>
           <button
-            className={`${styles.toggleBtn} ${unmetOnly ? styles.active : ""}`}
+            className={`${sharedStyles.toggleBtn} ${unmetOnly ? sharedStyles.active : ""}`}
             onClick={() => setUnmetOnly((prev) => !prev)}
           >
             Unmet goals
           </button>
         </div>
         {/* Sort Buttons */}
-        <div className={styles.sortBar}>
+        <div className={sharedStyles.sortBar}>
           {(
             [
               ["name", "Name (A–Z)"],
@@ -95,7 +96,7 @@ export default function Nutrients() {
           ).map(([key, label]) => (
             <button
               key={key}
-              className={`${styles.sortBtn} ${sortBy === key ? styles.active : ""}`}
+              className={`${sharedStyles.sortBtn} ${sortBy === key ? sharedStyles.active : ""}`}
               onClick={() => setSortBy(key as "name" | "desc" | "asc")}
             >
               {label}
@@ -103,10 +104,10 @@ export default function Nutrients() {
           ))}
         </div>
         {/* Scrollable list */}
-        <div className={styles.scrollable}>
+        <div className={sharedStyles.scrollable}>
           <div className={styles.microList}>
             {nutrients.length === 0 && (
-              <div className={styles.emptyList}>
+              <div className={sharedStyles.emptyList}>
                 No micronutrients match your filters
               </div>
             )}
@@ -147,7 +148,7 @@ export default function Nutrients() {
         </div>
       </div>
       {/* Right side */}
-      <div className={`${styles.splitRight} ${styles.w360}`}>
+      <div className={`${sharedStyles.splitRight} ${sharedStyles.w360}`}>
         {/* If selected */}
         {selected ? (
           <>
@@ -245,8 +246,8 @@ export default function Nutrients() {
             </div>
           </>
         ) : (
-          <div className={styles.panelEmpty}>
-            <div className={styles.panelEmptyIcon}>🔬</div>
+          <div className={sharedStyles.panelEmpty}>
+            <div className={sharedStyles.panelEmptyIcon}>🔬</div>
             <div>
               Select a micronutrient to see food sources ranked from highest to
               lowest

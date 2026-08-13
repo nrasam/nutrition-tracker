@@ -1,0 +1,250 @@
+.addBtn {
+  padding: 7px 14px;
+  background: var(--blue);
+  color: #fff;
+  border: none;
+  border-radius: var(--r-sm);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--sans);
+  transition: opacity 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  :hover {
+    opacity: 0.88;
+  }
+}
+
+.foodList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.foodRow {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 12px 16px;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: 1fr repeat(5, auto);
+  align-items: center;
+  gap: 16px;
+  transition: all 0.15s;
+
+  &:hover {
+    border-color: var(--border2);
+    background: var(--bg3);
+  }
+}
+
+.foodRow.sel {
+  border-color: var(--blue);
+  background: var(--bg3);
+}
+
+.foodRowInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.foodRowName {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.foodRowMeta {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.foodCat {
+  font-size: 10px;
+  color: var(--text3);
+  font-family: var(--mono);
+}
+
+.stockBadge {
+  font-size: 9px;
+  font-family: var(--mono);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 1px 5px;
+  border-radius: 3px;
+  text-transform: uppercase;
+}
+
+.stockBadge.yes {
+  background: var(--green-bg);
+  color: var(--green);
+}
+
+.stockBadge.no {
+  background: var(--bg4);
+  color: var(--text3);
+}
+
+.foodStat {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.foodStatVal {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.foodStatLbl {
+  font-size: 9px;
+  color: var(--text3);
+  font-family: var(--mono);
+}
+
+/* Food detail panel */
+.foodPanelHd {
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.foodPanelName {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.foodPanelServing {
+  font-size: 11px;
+  color: var(--text3);
+  font-family: var(--mono);
+  margin-bottom: 14px;
+}
+
+.macroTiles {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+}
+
+.macroTile {
+  background: var(--bg3);
+  border-radius: var(--r-sm);
+  padding: 8px 4px;
+  text-align: center;
+}
+
+.macroTileVal {
+  font-family: var(--mono);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1;
+}
+
+.macroTileLbl {
+  font-size: 9px;
+  color: var(--text3);
+  font-family: var(--mono);
+  margin-top: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.foodSectionLbl {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text3);
+  font-family: var(--mono);
+  margin: 14px 0 8px;
+}
+
+.foodSectionLbl:first-child {
+  margin-top: 0;
+}
+
+.nutrientList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nutrientItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nutrientLbl {
+  font-size: 12px;
+  color: var(--text2);
+  width: 130px;
+  flex-shrink: 0;
+}
+
+.nutrientTrack {
+  flex: 1;
+  height: 4px;
+  background: var(--bg4);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.nutrientFill {
+  height: 100%;
+  border-radius: 2px;
+  background: var(--teal);
+}
+
+.nutrientVal {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text);
+  width: 70px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.benefitItem {
+  display: flex;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.55;
+  margin-bottom: 7px;
+}
+
+.benefitDot {
+  color: var(--green);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.warnItem {
+  display: flex;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.55;
+  padding: 8px 10px;
+  background: var(--orange-bg);
+  border-radius: var(--r-sm);
+  border-left: 2px solid var(--orange);
+  margin-bottom: 6px;
+}
+
+.warnDot {
+  color: var(--orange);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
