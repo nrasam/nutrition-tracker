@@ -5,6 +5,7 @@ import type { Food } from "../../types";
 import { INITIAL_FOODS } from "../../data/mockData";
 import { useState, useMemo } from "react";
 import { formatMicro } from "../pagesHelpers";
+import { AddFood } from "../../components/modals/AddFood";
 
 type SortKey = "name" | "calories" | "protein" | "carbs" | "fat" | "fiber";
 
@@ -16,6 +17,7 @@ export default function Foods() {
   const [catFilter, setCatFilter] = useState("All");
   const [sortBy, setSortBy] = useState<SortKey>("name");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
+  const [showAddFood, setShowAddFood] = useState(false);
 
   const sorted = useMemo(() => {
     let list = foods.filter((food) => {
@@ -95,7 +97,12 @@ export default function Foods() {
             >
               Stocked Only
             </button>
-            <button className={styles.addBtn}>+ Add Food</button>
+            <button
+              className={styles.addBtn}
+              onClick={() => setShowAddFood(true)}
+            >
+              + Add Food
+            </button>
           </div>
           {/* Sort bar */}
           <div className={sharedStyles.sortBar}>
@@ -365,7 +372,7 @@ export default function Foods() {
         </div>
       </div>
       {/* Add food modal */}
-      <div></div>
+      {showAddFood && <AddFood />}
     </>
   );
 }
