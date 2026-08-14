@@ -13,22 +13,31 @@ export default function Foods() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [stockFilter, setStockFilter] = useState(false);
   const [search, setSearch] = useState("");
+  const [catFilter, setCatFilter] = useState("All");
 
   const sorted = useMemo(() => {
     let list = foods.filter((food) => {
       const matchSearch = food.name
         .toLocaleLowerCase()
         .includes(search.toLocaleLowerCase());
+      const matchCat = catFilter === "All" || food.category === catFilter;
 
-      return matchSearch;
+      return matchSearch && matchCat;
     });
 
     list = [...list].sort((a, b) => a.name.localeCompare(b.name));
 
     return list;
-  }, [foods, search]);
+  }, [foods, search, catFilter]);
 
   const selected = foods.find((food) => food.id === selectedId) ?? null;
+
+  // Get a sorted list of food categories from the foods present in the list
+  const categories = useMemo(() => {
+    // Use Set to remove duplicates
+    const cats = Array.from(new Set(foods.map((food) => food.category))).sort();
+    return ["All", ...cats];
+  }, [foods]);
 
   return (
     <>
@@ -45,8 +54,16 @@ export default function Foods() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
-            <select className={sharedStyles.fsel} name="" id="">
-              <option value=""></option>
+            <select
+              className={sharedStyles.fsel}
+              value={catFilter}
+              onChange={(e) => setCatFilter(e.target.value)}
+            >
+              {categories.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
             </select>
             <button
               className={`${sharedStyles.toggleBtn} ${stockFilter ? sharedStyles.active : ""}`}
