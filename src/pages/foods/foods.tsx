@@ -4,7 +4,7 @@ import sharedStyles from "../shared.module.css";
 import type { Food } from "../../types";
 import { INITIAL_FOODS } from "../../data/mockData";
 import { useState, useMemo } from "react";
-import { statusColor, formatMicro } from "../pagesHelpers";
+import { formatMicro } from "../pagesHelpers";
 
 type SortKey = "name" | "calories" | "protein" | "carbs" | "fat" | "fiber";
 
@@ -14,6 +14,8 @@ export default function Foods() {
   const [stockFilter, setStockFilter] = useState(false);
   const [search, setSearch] = useState("");
   const [catFilter, setCatFilter] = useState("All");
+  const [sortBy, setSortBy] = useState<SortKey>("name");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
 
   const sorted = useMemo(() => {
     let list = foods.filter((food) => {
@@ -26,10 +28,20 @@ export default function Foods() {
       return matchSearch && matchCat && matchStocked;
     });
 
-    list = [...list].sort((a, b) => a.name.localeCompare(b.name));
+    list = [...list].sort((a, b) => {
+      if (sortBy === "name") {
+        return sortDir === "asc"
+          ? a.name.localeCompare(b.name)
+          : b.name.localeCompare(a.name);
+      } else {
+        return sortDir === "asc"
+          ? a[sortBy] - b[sortBy]
+          : b[sortBy] - a[sortBy];
+      }
+    });
 
     return list;
-  }, [foods, search, catFilter, stockFilter]);
+  }, [foods, search, catFilter, stockFilter, sortBy, sortDir]);
 
   const selected = foods.find((food) => food.id === selectedId) ?? null;
 
@@ -39,6 +51,17 @@ export default function Foods() {
     const cats = Array.from(new Set(foods.map((food) => food.category))).sort();
     return ["All", ...cats];
   }, [foods]);
+
+  function handleSort(key: SortKey) {
+    // Reverse sort direction if the same sort is clicked again
+    if (sortBy === key) setSortDir((dir) => (dir === "asc" ? "desc" : "asc"));
+    else {
+      // Otherwise change sort
+      setSortBy(key);
+      // Reset sorting direction to desc unless sorting by name
+      setSortDir(key === "name" ? "asc" : "desc");
+    }
+  }
 
   return (
     <>
@@ -86,8 +109,13 @@ export default function Foods() {
                 "fiber",
               ] as SortKey[]
             ).map((key) => (
-              <button key={key} className={`${sharedStyles.sortBtn}`}>
+              <button
+                key={key}
+                className={`${sharedStyles.sortBtn} ${sortBy === key ? sharedStyles.active : ""}`}
+                onClick={() => handleSort(key)}
+              >
                 {key.toUpperCase()}
+                {sortBy === key ? (sortDir === "asc" ? " ↑" : " ↓") : ""}
               </button>
             ))}
           </div>
@@ -108,7 +136,9 @@ export default function Foods() {
                   <div className={styles.foodRowInfo}>
                     <div className={styles.foodRowName}>{food.name}</div>
                     <div className={styles.foodRowMeta}>
-                      <span className={styles.foodCat}>{food.category}</span>
+                      <span className={styles.foodCat}>
+                        {food.category} | {food.serving}
+                      </span>
                       <span
                         className={`${styles.stockBadge} ${food.stocked ? styles.yes : styles.no}`}
                       >
