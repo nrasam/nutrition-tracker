@@ -148,6 +148,7 @@
   color: var(--text2);
   font-family: var(--sans);
   transition: all 0.15s;
+  height: 100%;
 
   &:hover {
     color: var(--text);

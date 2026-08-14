@@ -21,14 +21,15 @@ export default function Foods() {
         .toLocaleLowerCase()
         .includes(search.toLocaleLowerCase());
       const matchCat = catFilter === "All" || food.category === catFilter;
+      const matchStocked = !stockFilter || food.stocked;
 
-      return matchSearch && matchCat;
+      return matchSearch && matchCat && matchStocked;
     });
 
     list = [...list].sort((a, b) => a.name.localeCompare(b.name));
 
     return list;
-  }, [foods, search, catFilter]);
+  }, [foods, search, catFilter, stockFilter]);
 
   const selected = foods.find((food) => food.id === selectedId) ?? null;
 
