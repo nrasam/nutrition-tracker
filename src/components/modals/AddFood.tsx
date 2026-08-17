@@ -1,5 +1,7 @@
 import styles from "./AddFood.module.css";
 
+import { useState } from "react";
+
 const MICRO_FIELDS: {
   key: string;
   label: string;
@@ -36,6 +38,8 @@ interface NewFood {
   fiber: string;
   stocked: boolean;
   micros: Record<string, string>;
+  benefits: string[];
+  warnings: string[];
 }
 
 const EMPTY_FOOD: NewFood = {
@@ -49,9 +53,19 @@ const EMPTY_FOOD: NewFood = {
   fiber: "",
   stocked: true,
   micros: { ...EMPTY_MICROS },
+  benefits: [],
+  warnings: [],
 };
 
 export function AddFood() {
+  const [form, setForm] = useState<NewFood>({
+    ...EMPTY_FOOD,
+    micros: { ...EMPTY_MICROS },
+  });
+  const [microsOpen, setMicrosOpen] = useState(false);
+  const [benefitsOpen, setBenefitsOpen] = useState(false);
+  const [warningsOpen, setWarningsOpen] = useState(false);
+
   return (
     <div className={styles.overlay}>
       <div className={styles.modal}>
@@ -98,7 +112,7 @@ export function AddFood() {
             <label className={styles.fieldLbl}>Serving Size</label>
             <input
               className={styles.fieldInput}
-              placeholder="e.g. 1 cup (240ml)"
+              placeholder="e.g. 1 cup (250 ml)"
             />
           </div>
         </div>
@@ -156,10 +170,7 @@ export function AddFood() {
             />
           </div>
           <div className={styles.field} style={{ justifyContent: "flex-end" }}>
-            <label
-              className={styles.stockToggle}
-              style={{ marginBottom: 0, marginTop: "auto" }}
-            >
+            <label className={styles.stockToggle}>
               <input type="checkbox" className={styles.stockCheck} />
               Currently stocked
             </label>
@@ -167,26 +178,30 @@ export function AddFood() {
         </div>
 
         {/* Micronutrients — collapsible */}
-        <div className={styles.collapseHd}>
+        <div
+          className={styles.collapseHd}
+          onClick={() => setMicrosOpen((p) => !p)}
+        >
           <div className={styles.collapseHdLeft}>
             <span className={styles.collapseHdLbl}>Micronutrients</span>
-            {1 > 0 && (
+            {true && (
               <span className={styles.collapseHdCount}>{0} entered</span>
             )}
           </div>
           <span
-            className={`${styles.collapseArrow} ${true ? styles.open : ""}`}
+            className={`${styles.collapseArrow} ${microsOpen ? styles.open : ""}`}
           >
             ▼
           </span>
         </div>
-        {true && (
+
+        {microsOpen && (
           <div className={styles.collapseBody}>
             <div className={styles.microGrid}>
-              {MICRO_FIELDS.map((m) => (
-                <div key={m.key} className={styles.field}>
+              {MICRO_FIELDS.map((micro) => (
+                <div key={micro.key} className={styles.field}>
                   <label className={styles.fieldLbl}>
-                    {m.label} ({m.unit})
+                    {micro.label} ({micro.unit})
                   </label>
                   <input
                     className={`${styles.fieldInput} ${styles.fieldInputSm}`}
@@ -197,6 +212,92 @@ export function AddFood() {
                 </div>
               ))}
             </div>
+          </div>
+        )}
+
+        {/* Benefits — collapsible */}
+        <div
+          className={styles.collapseHd}
+          onClick={() => setBenefitsOpen((p) => !p)}
+        >
+          <div className={styles.collapseHdLeft}>
+            <span className={styles.collapseHdLbl}>Benefits</span>
+            {true && (
+              <span className={`${styles.collapseHdCount} ${styles.green}`}>
+                {0} added
+              </span>
+            )}
+          </div>
+          <span
+            className={`${styles.collapseArrow} ${benefitsOpen ? styles.open : ""}`}
+          >
+            ▼
+          </span>
+        </div>
+
+        {benefitsOpen && (
+          <div className={styles.collapseBody}>
+            {form.benefits.map((ben, i) => (
+              <div key={i} className={styles.listItemRow}>
+                <input
+                  className={`${styles.fieldInput} ${styles.fieldInputSm}`}
+                  placeholder="e.g. Rich in antioxidants that reduce inflammation"
+                  value={ben}
+                />
+                <button className={styles.listRemoveBtn}>×</button>
+              </div>
+            ))}
+            <button
+              className={styles.listAddBtn}
+              onClick={() => {
+                setBenefitsOpen(true);
+              }}
+            >
+              ＋ Add benefit
+            </button>
+          </div>
+        )}
+
+        {/* Warnings — collapsible */}
+        <div
+          className={styles.collapseHd}
+          onClick={() => setWarningsOpen((p) => !p)}
+        >
+          <div className={styles.collapseHdLeft}>
+            <span className={styles.collapseHdLbl}>Warnings</span>
+            {true && (
+              <span className={`${styles.collapseHdCount} ${styles.orange}`}>
+                {0} added
+              </span>
+            )}
+          </div>
+          <span
+            className={`${styles.collapseArrow} ${warningsOpen ? styles.open : ""}`}
+          >
+            ▼
+          </span>
+        </div>
+
+        {warningsOpen && (
+          <div className={styles.collapseBody}>
+            {form.warnings.map((warn, i) => (
+              <div key={i} className="list-item-row">
+                <input
+                  className={`${styles.fieldInput} ${styles.fieldInputSm}`}
+                  placeholder="e.g. High in sodium — limit if managing blood pressure"
+                  value={warn}
+                />
+                <button className={styles.listRemoveBtn}>×</button>
+              </div>
+            ))}
+            <button
+              className={styles.listAddBtn}
+              onClick={() => {
+                setWarningsOpen(true);
+              }}
+            >
+              ＋ Add warning
+            </button>
           </div>
         )}
 

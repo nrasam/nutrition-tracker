@@ -139,6 +139,7 @@
   color: var(--text2);
   margin-bottom: 14px;
   user-select: none;
+  margin: auto 0;
 }
 
 .stockCheck {
@@ -231,6 +232,21 @@
   border-radius: 3px;
 }
 
+.collapseHdCount.blue {
+  color: var(--blue);
+  background: var(--blue-bg);
+}
+
+.collapseHdCount.green {
+  color: var(--green);
+  background: var(--green-bg);
+}
+
+.collapseHdCount.orange {
+  color: var(--orange);
+  background: var(--orange-bg);
+}
+
 .collapseArrow {
   font-size: 10px;
   color: var(--text3);
@@ -250,4 +266,60 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
+}
+
+.listItemRow {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.listItemRow .fieldInput {
+  flex: 1;
+  min-width: 0;
+}
+
+.listRemoveBtn {
+  flex-shrink: 0;
+  width: 28px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  color: var(--text3);
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.15s;
+  padding: 0;
+
+  &:hover {
+    border-color: var(--red);
+    color: var(--red);
+    background: var(--red-bg);
+  }
+}
+
+.listAddBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: none;
+  border: 1px dashed var(--border2);
+  border-radius: var(--r-sm);
+  color: var(--text3);
+  cursor: pointer;
+  font-size: 12px;
+  font-family: var(--sans);
+  transition: all 0.15s;
+  width: 100%;
+  margin-top: 2px;
+
+  &:hover {
+    color: var(--text);
+    border-color: var(--text3);
+  }
 }
