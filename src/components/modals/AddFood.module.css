@@ -9,3 +9,245 @@
   backdrop-filter: blur(4px);
   padding: 16px;
 }
+
+.modal {
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: var(--r);
+  width: 100%;
+  max-width: 520px;
+  max-height: 85vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 24px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--bg4) transparent;
+  box-sizing: border-box;
+}
+
+.modal::-webkit-scrollbar {
+  width: 4px;
+}
+
+.modal::-webkit-scrollbar-thumb {
+  background: var(--bg4);
+  border-radius: 2px;
+}
+
+.modalHd {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.modalTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.modalClose {
+  background: none;
+  border: none;
+  color: var(--text3);
+  cursor: pointer;
+  font-size: 20px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: color 0.15s;
+  line-height: 1;
+
+  &:hover {
+    color: var(--text);
+  }
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.field.span2 {
+  grid-column: span 2;
+}
+
+.fieldLbl {
+  font-size: 10px;
+  font-family: var(--mono);
+  letter-spacing: 0.06em;
+  color: var(--text3);
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fieldInput {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: var(--r-sm);
+  padding: 8px 10px;
+  font-size: 13px;
+  font-family: var(--sans);
+  outline: none;
+  transition: border-color 0.15s;
+  width: 100%;
+  box-sizing: border-box;
+
+  &:focus {
+    border-color: var(--blue);
+  }
+
+  &::placeholder {
+    color: var(--text3);
+  }
+}
+
+.fieldInputSm {
+  padding: 6px 8px;
+  font-size: 12px;
+}
+
+.formSec {
+  font-size: 10px;
+  font-family: var(--mono);
+  letter-spacing: 0.08em;
+  color: var(--text3);
+  text-transform: uppercase;
+  margin: 16px 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+
+.stockToggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text2);
+  margin-bottom: 14px;
+  user-select: none;
+}
+
+.stockCheck {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--blue);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.modalFtr {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.btnPrimary {
+  padding: 8px 18px;
+  background: var(--blue);
+  color: #fff;
+  border: none;
+  border-radius: var(--r-sm);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--sans);
+  transition: opacity 0.15s;
+
+  &:hover {
+    opacity: 0.9;
+  }
+}
+
+.btnGhost {
+  padding: 8px 14px;
+  background: none;
+  color: var(--text2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  font-size: 13px;
+  cursor: pointer;
+  font-family: var(--sans);
+  transition: all 0.15s;
+
+  &:hover {
+    color: var(--text);
+    border-color: var(--border2);
+  }
+}
+
+.collapseHd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  margin: 16px 0 0;
+  padding: 9px 12px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  user-select: none;
+  transition: border-color 0.15s;
+
+  &:hover {
+    border-color: var(--border2);
+  }
+}
+
+.collapseHdLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.collapseHdLbl {
+  font-size: 10px;
+  font-family: var(--mono);
+  letter-spacing: 0.08em;
+  color: var(--text3);
+  text-transform: uppercase;
+}
+
+.collapseHdCount {
+  font-size: 10px;
+  font-family: var(--mono);
+  color: var(--blue);
+  background: var(--blue-bg);
+  padding: 1px 6px;
+  border-radius: 3px;
+}
+
+.collapseArrow {
+  font-size: 10px;
+  color: var(--text3);
+  transition: transform 0.2s;
+  display: inline-block;
+}
+
+.collapseArrow.open {
+  transform: rotate(180deg);
+}
+
+.collapseBody {
+  margin-top: 10px;
+}
+
+.microGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}

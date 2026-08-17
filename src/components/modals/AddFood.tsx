@@ -22,7 +22,8 @@ const MICRO_FIELDS: {
   { key: "selenium", label: "Selenium", unit: "mcg", dailyMax: 55 },
 ];
 
-const EMPTY_MICROS = Object.fromEntries(MICRO_FIELDS.map((f) => [f.key, ""]));
+// Creates an object with a separate property for each micro, all set to an empty string
+const EMPTY_MICROS = Object.fromEntries(MICRO_FIELDS.map((m) => [m.key, ""]));
 
 interface NewFood {
   name: string;
@@ -86,9 +87,11 @@ export function AddFood() {
                 "Fish & Seafood",
                 "Red Meat",
                 "Other",
-              ].map((cat) => (
-                <option key={cat}>{cat}</option>
-              ))}
+              ]
+                .sort()
+                .map((cat) => (
+                  <option key={cat}>{cat}</option>
+                ))}
             </select>
           </div>
           <div className={styles.field}>
