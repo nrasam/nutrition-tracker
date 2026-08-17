@@ -372,7 +372,7 @@ export default function Foods() {
         </div>
       </div>
       {/* Add food modal */}
-      {showAddFood && <AddFood />}
+      {showAddFood && <AddFood onClose={() => setShowAddFood(false)} />}
     </>
   );
 }

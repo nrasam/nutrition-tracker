@@ -57,7 +57,7 @@ const EMPTY_FOOD: NewFood = {
   warnings: [],
 };
 
-export function AddFood() {
+export function AddFood({ onClose }: { onClose: () => void }) {
   const [form, setForm] = useState<NewFood>({
     ...EMPTY_FOOD,
     micros: { ...EMPTY_MICROS },
@@ -67,11 +67,17 @@ export function AddFood() {
   const [warningsOpen, setWarningsOpen] = useState(false);
 
   return (
-    <div className={styles.overlay}>
+    <div
+      className={styles.overlay}
+      // Only close when clicking on the overlay
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+    >
       <div className={styles.modal}>
         <div className={styles.modalHd}>
           <span className={styles.modalTitle}>Add Food</span>
-          <button className={styles.modalClose}>×</button>
+          <button className={styles.modalClose} onClick={onClose}>
+            ×
+          </button>
         </div>
 
         {/* Name */}
@@ -302,7 +308,9 @@ export function AddFood() {
         )}
 
         <div className={styles.modalFtr}>
-          <button className={styles.btnGhost}>Cancel</button>
+          <button className={styles.btnGhost} onClick={onClose}>
+            Cancel
+          </button>
           <button className={styles.btnPrimary}>Add Food</button>
         </div>
       </div>
