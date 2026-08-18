@@ -80,6 +80,23 @@ export function AddFood({ onClose }: { onClose: () => void }) {
   const filledBenefits = form.benefits.filter((b) => b.trim() !== "").length;
   const filledWarnings = form.warnings.filter((w) => w.trim() !== "").length;
 
+  // Adds an empty benefit or warning to the form's benefit/warning array
+  const addBenOrWarning = (field: "benefits" | "warnings") =>
+    setForm((prev) => ({ ...prev, [field]: [...prev[field], ""] }));
+  // Update Benefits or warnings list with the new value
+  const updateList = (field: "benefits" | "warnings", i: number, val: string) =>
+    setForm((prev) => {
+      const arr = [...prev[field]];
+      arr[i] = val;
+      return { ...prev, [field]: arr };
+    });
+  // Removes the item from the benefits or warnings array at position i
+  const removeItem = (field: "benefits" | "warnings", i: number) =>
+    setForm((prev) => ({
+      ...prev,
+      [field]: prev[field].filter((_, idx) => idx !== i),
+    }));
+
   return (
     <div
       className={styles.overlay}
@@ -292,13 +309,20 @@ export function AddFood({ onClose }: { onClose: () => void }) {
                   className={`${styles.fieldInput} ${styles.fieldInputSm}`}
                   placeholder="e.g. Rich in antioxidants that reduce inflammation"
                   value={ben}
+                  onChange={(e) => updateList("benefits", i, e.target.value)}
                 />
-                <button className={styles.listRemoveBtn}>×</button>
+                <button
+                  className={styles.listRemoveBtn}
+                  onClick={() => removeItem("benefits", i)}
+                >
+                  ×
+                </button>
               </div>
             ))}
             <button
               className={styles.listAddBtn}
               onClick={() => {
+                addBenOrWarning("benefits");
                 setBenefitsOpen(true);
               }}
             >
@@ -330,18 +354,25 @@ export function AddFood({ onClose }: { onClose: () => void }) {
         {warningsOpen && (
           <div className={styles.collapseBody}>
             {form.warnings.map((warn, i) => (
-              <div key={i} className="list-item-row">
+              <div key={i} className={styles.listItemRow}>
                 <input
                   className={`${styles.fieldInput} ${styles.fieldInputSm}`}
                   placeholder="e.g. High in sodium — limit if managing blood pressure"
                   value={warn}
+                  onChange={(e) => updateList("warnings", i, e.target.value)}
                 />
-                <button className={styles.listRemoveBtn}>×</button>
+                <button
+                  className={styles.listRemoveBtn}
+                  onClick={() => removeItem("warnings", i)}
+                >
+                  ×
+                </button>
               </div>
             ))}
             <button
               className={styles.listAddBtn}
               onClick={() => {
+                addBenOrWarning("warnings");
                 setWarningsOpen(true);
               }}
             >
