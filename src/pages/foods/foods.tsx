@@ -372,7 +372,12 @@ export default function Foods() {
         </div>
       </div>
       {/* Add food modal */}
-      {showAddFood && <AddFood onClose={() => setShowAddFood(false)} />}
+      {showAddFood && (
+        <AddFood
+          onClose={() => setShowAddFood(false)}
+          onAdd={(food) => setFoods((prev) => [...prev, food])}
+        />
+      )}
     </>
   );
 }

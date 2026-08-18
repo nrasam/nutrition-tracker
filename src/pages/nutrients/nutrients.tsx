@@ -1,14 +1,7 @@
 import styles from "./nutrients.module.css";
 import sharedStyles from "../shared.module.css";
 
-import {
-  TODAY_INTAKE,
-  GOALS,
-  CURRENT_WEIGHT,
-  GOAL_WEIGHT,
-  WEIGHT_HISTORY,
-  MICROS,
-} from "../../data/mockData";
+import { MICROS } from "../../data/mockData";
 
 import { statusColor, formatMicro } from "../pagesHelpers";
 import { useState } from "react";

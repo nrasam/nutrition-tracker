@@ -324,3 +324,10 @@
     border-color: var(--text3);
   }
 }
+
+.validationErrorMsg {
+  color: #e74c3c;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+  display: block;
+}

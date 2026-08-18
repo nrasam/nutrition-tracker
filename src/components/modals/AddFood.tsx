@@ -1,31 +1,36 @@
+import type { FoodNutrient, Food } from "../../types";
 import styles from "./AddFood.module.css";
 
 import { useState } from "react";
 
-const MICRO_FIELDS: {
-  key: string;
-  label: string;
-  unit: string;
-  dailyMax?: number;
-}[] = [
-  { key: "vitaminD", label: "Vitamin D", unit: "IU", dailyMax: 800 },
-  { key: "vitaminC", label: "Vitamin C", unit: "mg", dailyMax: 90 },
-  { key: "vitaminB12", label: "Vitamin B12", unit: "mcg", dailyMax: 2.4 },
-  { key: "folate", label: "Folate (B9)", unit: "mcg", dailyMax: 400 },
-  { key: "iron", label: "Iron", unit: "mg", dailyMax: 18 },
-  { key: "calcium", label: "Calcium", unit: "mg", dailyMax: 1000 },
-  { key: "magnesium", label: "Magnesium", unit: "mg", dailyMax: 420 },
-  { key: "zinc", label: "Zinc", unit: "mg", dailyMax: 11 },
-  { key: "potassium", label: "Potassium", unit: "mg", dailyMax: 4700 },
-  { key: "omega3", label: "Omega-3 ALA", unit: "g", dailyMax: 1.6 },
-  { key: "vitaminA", label: "Vitamin A", unit: "IU", dailyMax: 5000 },
-  { key: "vitaminE", label: "Vitamin E", unit: "mg", dailyMax: 15 },
-  { key: "vitaminK", label: "Vitamin K", unit: "mcg", dailyMax: 120 },
-  { key: "selenium", label: "Selenium", unit: "mcg", dailyMax: 55 },
+const MICRO_FIELDS: FoodNutrient[] = [
+  { key: "vitaminD", label: "Vitamin D", unit: "IU", dailyMax: 800, value: 0 },
+  { key: "vitaminC", label: "Vitamin C", unit: "mg", dailyMax: 90, value: 0 },
+  {
+    key: "vitaminB12",
+    label: "Vitamin B12",
+    unit: "mcg",
+    dailyMax: 2.4,
+    value: 0,
+  },
+  { key: "folate", label: "Folate (B9)", unit: "mcg", dailyMax: 400, value: 0 },
+  { key: "iron", label: "Iron", unit: "mg", dailyMax: 18, value: 0 },
+  { key: "calcium", label: "Calcium", unit: "mg", dailyMax: 1000, value: 0 },
+  { key: "magnesium", label: "Magnesium", unit: "mg", dailyMax: 420, value: 0 },
+  { key: "zinc", label: "Zinc", unit: "mg", dailyMax: 11, value: 0 },
+  {
+    key: "potassium",
+    label: "Potassium",
+    unit: "mg",
+    dailyMax: 4700,
+    value: 0,
+  },
+  { key: "omega3", label: "Omega-3 ALA", unit: "g", dailyMax: 1.6, value: 0 },
+  { key: "vitaminA", label: "Vitamin A", unit: "IU", dailyMax: 5000, value: 0 },
+  { key: "vitaminE", label: "Vitamin E", unit: "mg", dailyMax: 15, value: 0 },
+  { key: "vitaminK", label: "Vitamin K", unit: "mcg", dailyMax: 120, value: 0 },
+  { key: "selenium", label: "Selenium", unit: "mcg", dailyMax: 55, value: 0 },
 ];
-
-// Creates an object with a separate property for each micro, all set to an empty string
-const EMPTY_MICROS = Object.fromEntries(MICRO_FIELDS.map((m) => [m.key, ""]));
 
 interface NewFood {
   name: string;
@@ -37,7 +42,7 @@ interface NewFood {
   fat: string;
   fiber: string;
   stocked: boolean;
-  micros: Record<string, string>;
+  micros: FoodNutrient[];
   benefits: string[];
   warnings: string[];
 }
@@ -52,30 +57,50 @@ const EMPTY_FOOD: NewFood = {
   fat: "",
   fiber: "",
   stocked: true,
-  micros: { ...EMPTY_MICROS },
+  micros: [...MICRO_FIELDS],
   benefits: [],
   warnings: [],
 };
 
-export function AddFood({ onClose }: { onClose: () => void }) {
+export function AddFood({
+  onClose,
+  onAdd,
+}: {
+  onClose: () => void;
+  onAdd: (food: Food) => void;
+}) {
   const [form, setForm] = useState<NewFood>({
     ...EMPTY_FOOD,
-    micros: { ...EMPTY_MICROS },
+    // Gets a new set of micro_fields everytime instead of referencing the same one from EMPTY_FOOD
+    micros: [...MICRO_FIELDS],
   });
   const [microsOpen, setMicrosOpen] = useState(false);
   const [benefitsOpen, setBenefitsOpen] = useState(false);
   const [warningsOpen, setWarningsOpen] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   // Update the form with the field 's new value
-  const set = (key: keyof NewFood, val: string | boolean) =>
+  const set = (key: keyof NewFood, val: string | boolean) => {
     setForm((prev) => ({ ...prev, [key]: val }));
+
+    // Clear error for this field when user starts typing
+    if (errors[key as string]) {
+      setErrors((prev) => ({ ...prev, [key]: "" }));
+    }
+  };
   const setMicro = (key: string, val: string) =>
-    setForm((prev) => ({ ...prev, micros: { ...prev.micros, [key]: val } }));
+    setForm((prev) => {
+      const arr = [...prev.micros];
+      const i = arr.findIndex((m) => m.key === key);
+      if (i !== -1) {
+        arr[i] = { ...arr[i], value: parseFloat(val) || 0 };
+      }
+      return { ...prev, micros: arr };
+    });
 
   // Count the # of micros in the form that are not empty
-  // Checks against what should be there (MIRCO_FIELDS)
-  const filledMicroCount = MICRO_FIELDS.filter(
-    (m) => form.micros[m.key] !== "",
+  const filledMicroCount = form.micros.filter(
+    (micro) => micro.value !== 0,
   ).length;
   const filledBenefits = form.benefits.filter((b) => b.trim() !== "").length;
   const filledWarnings = form.warnings.filter((w) => w.trim() !== "").length;
@@ -96,6 +121,41 @@ export function AddFood({ onClose }: { onClose: () => void }) {
       ...prev,
       [field]: prev[field].filter((_, idx) => idx !== i),
     }));
+
+  function handleAdd() {
+    const newErrors: Record<string, string> = {};
+
+    // Validate required fields
+    if (!form.name.trim()) {
+      newErrors.name = "Food name is required!";
+    }
+
+    // If there are errors, show them and return
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    const nutrients: FoodNutrient[] = form.micros.filter((m) => m.value !== 0);
+    const food: Food = {
+      id: `${Date.now()}`,
+      name: form.name.trim(),
+      category: form.category,
+      serving: form.serving || "1 serving",
+      stocked: form.stocked,
+      calories: parseFloat(form.calories) || 0,
+      protein: parseFloat(form.protein) || 0,
+      carbs: parseFloat(form.carbs) || 0,
+      fat: parseFloat(form.fat) || 0,
+      fiber: parseFloat(form.fiber) || 0,
+      nutrients,
+      benefits: form.benefits.filter((b) => b.trim() !== ""),
+      warnings: form.warnings.filter((w) => w.trim() !== ""),
+    };
+
+    onAdd(food);
+    onClose();
+  }
 
   return (
     <div
@@ -122,6 +182,9 @@ export function AddFood({ onClose }: { onClose: () => void }) {
               onChange={(e) => set("name", e.target.value)}
               required={true}
             />
+            {errors.name && (
+              <span className={styles.validationErrorMsg}>{errors.name}</span>
+            )}
           </div>
         </div>
 
@@ -262,21 +325,24 @@ export function AddFood({ onClose }: { onClose: () => void }) {
         {microsOpen && (
           <div className={styles.collapseBody}>
             <div className={styles.microGrid}>
-              {MICRO_FIELDS.map((micro) => (
-                <div key={micro.key} className={styles.field}>
-                  <label className={styles.fieldLbl}>
-                    {micro.label} ({micro.unit})
-                  </label>
-                  <input
-                    className={`${styles.fieldInput} ${styles.fieldInputSm}`}
-                    type="number"
-                    min="0"
-                    placeholder="—"
-                    value={form.micros[micro.key]}
-                    onChange={(e) => setMicro(micro.key, e.target.value)}
-                  />
-                </div>
-              ))}
+              {MICRO_FIELDS.map((micro) => {
+                const microData = form.micros.find((m) => m.key === micro.key);
+                return (
+                  <div key={micro.key} className={styles.field}>
+                    <label className={styles.fieldLbl}>
+                      {micro.label} ({micro.unit})
+                    </label>
+                    <input
+                      className={`${styles.fieldInput} ${styles.fieldInputSm}`}
+                      type="number"
+                      min="0"
+                      placeholder="—"
+                      value={microData?.value || ""}
+                      onChange={(e) => setMicro(micro.key, e.target.value)}
+                    />
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}
@@ -385,7 +451,9 @@ export function AddFood({ onClose }: { onClose: () => void }) {
           <button className={styles.btnGhost} onClick={onClose}>
             Cancel
           </button>
-          <button className={styles.btnPrimary}>Add Food</button>
+          <button className={styles.btnPrimary} onClick={handleAdd}>
+            Add Food
+          </button>
         </div>
       </div>
     </div>

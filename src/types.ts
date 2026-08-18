@@ -16,6 +16,7 @@ export interface Micro {
 }
 
 export interface FoodNutrient {
+  key: string;
   label: string;
   value: number;
   unit: string;
