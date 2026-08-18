@@ -66,6 +66,20 @@ export function AddFood({ onClose }: { onClose: () => void }) {
   const [benefitsOpen, setBenefitsOpen] = useState(false);
   const [warningsOpen, setWarningsOpen] = useState(false);
 
+  // Update the form with the field 's new value
+  const set = (key: keyof NewFood, val: string | boolean) =>
+    setForm((prev) => ({ ...prev, [key]: val }));
+  const setMicro = (key: string, val: string) =>
+    setForm((prev) => ({ ...prev, micros: { ...prev.micros, [key]: val } }));
+
+  // Count the # of micros in the form that are not empty
+  // Checks against what should be there (MIRCO_FIELDS)
+  const filledMicroCount = MICRO_FIELDS.filter(
+    (m) => form.micros[m.key] !== "",
+  ).length;
+  const filledBenefits = form.benefits.filter((b) => b.trim() !== "").length;
+  const filledWarnings = form.warnings.filter((w) => w.trim() !== "").length;
+
   return (
     <div
       className={styles.overlay}
@@ -87,6 +101,9 @@ export function AddFood({ onClose }: { onClose: () => void }) {
             <input
               className={styles.fieldInput}
               placeholder="e.g. Greek Yogurt"
+              value={form.name}
+              onChange={(e) => set("name", e.target.value)}
+              required={true}
             />
           </div>
         </div>
@@ -95,7 +112,11 @@ export function AddFood({ onClose }: { onClose: () => void }) {
         <div className={styles.formRow}>
           <div className={styles.field}>
             <label className={styles.fieldLbl}>Category</label>
-            <select className={styles.fieldInput}>
+            <select
+              className={styles.fieldInput}
+              value={form.category}
+              onChange={(e) => set("category", e.target.value)}
+            >
               {[
                 "Vegetables",
                 "Fruits",
@@ -119,6 +140,8 @@ export function AddFood({ onClose }: { onClose: () => void }) {
             <input
               className={styles.fieldInput}
               placeholder="e.g. 1 cup (250 ml)"
+              value={form.serving}
+              onChange={(e) => set("serving", e.target.value)}
             />
           </div>
         </div>
@@ -133,6 +156,9 @@ export function AddFood({ onClose }: { onClose: () => void }) {
               type="number"
               min="0"
               placeholder="0"
+              value={form.calories}
+              onChange={(e) => set("calories", e.target.value)}
+              required={true}
             />
           </div>
           <div className={styles.field}>
@@ -142,6 +168,8 @@ export function AddFood({ onClose }: { onClose: () => void }) {
               type="number"
               min="0"
               placeholder="0"
+              value={form.protein}
+              onChange={(e) => set("protein", e.target.value)}
             />
           </div>
         </div>
@@ -153,6 +181,8 @@ export function AddFood({ onClose }: { onClose: () => void }) {
               type="number"
               min="0"
               placeholder="0"
+              value={form.carbs}
+              onChange={(e) => set("carbs", e.target.value)}
             />
           </div>
           <div className={styles.field}>
@@ -162,6 +192,8 @@ export function AddFood({ onClose }: { onClose: () => void }) {
               type="number"
               min="0"
               placeholder="0"
+              value={form.fat}
+              onChange={(e) => set("fat", e.target.value)}
             />
           </div>
         </div>
@@ -173,11 +205,18 @@ export function AddFood({ onClose }: { onClose: () => void }) {
               type="number"
               min="0"
               placeholder="0"
+              value={form.fiber}
+              onChange={(e) => set("fiber", e.target.value)}
             />
           </div>
           <div className={styles.field} style={{ justifyContent: "flex-end" }}>
             <label className={styles.stockToggle}>
-              <input type="checkbox" className={styles.stockCheck} />
+              <input
+                type="checkbox"
+                className={styles.stockCheck}
+                checked={form.stocked}
+                onChange={(e) => set("stocked", e.target.checked)}
+              />
               Currently stocked
             </label>
           </div>
@@ -190,8 +229,10 @@ export function AddFood({ onClose }: { onClose: () => void }) {
         >
           <div className={styles.collapseHdLeft}>
             <span className={styles.collapseHdLbl}>Micronutrients</span>
-            {true && (
-              <span className={styles.collapseHdCount}>{0} entered</span>
+            {filledMicroCount > 0 && (
+              <span className={styles.collapseHdCount}>
+                {filledMicroCount} entered
+              </span>
             )}
           </div>
           <span
@@ -214,6 +255,8 @@ export function AddFood({ onClose }: { onClose: () => void }) {
                     type="number"
                     min="0"
                     placeholder="—"
+                    value={form.micros[micro.key]}
+                    onChange={(e) => setMicro(micro.key, e.target.value)}
                   />
                 </div>
               ))}
@@ -228,9 +271,9 @@ export function AddFood({ onClose }: { onClose: () => void }) {
         >
           <div className={styles.collapseHdLeft}>
             <span className={styles.collapseHdLbl}>Benefits</span>
-            {true && (
+            {filledBenefits > 0 && (
               <span className={`${styles.collapseHdCount} ${styles.green}`}>
-                {0} added
+                {filledBenefits} added
               </span>
             )}
           </div>
@@ -271,9 +314,9 @@ export function AddFood({ onClose }: { onClose: () => void }) {
         >
           <div className={styles.collapseHdLeft}>
             <span className={styles.collapseHdLbl}>Warnings</span>
-            {true && (
+            {filledWarnings > 0 && (
               <span className={`${styles.collapseHdCount} ${styles.orange}`}>
-                {0} added
+                {filledWarnings} added
               </span>
             )}
           </div>
