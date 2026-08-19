@@ -38,3 +38,18 @@ export interface Food {
   benefits: string[];
   warnings: string[];
 }
+
+export interface LogEntry {
+  id: string;
+  foodId: string;
+  name: string;
+  servings: number;
+  serving: string;
+  time: string;
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+  fiber: number;
+  nutrients: FoodNutrient[];
+}
