@@ -1,0 +1,160 @@
+.logSummaryBar {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.logSumTile {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 14px 16px;
+  text-align: center;
+}
+
+.logSumVal {
+  font-family: var(--mono);
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.logSumLbl {
+  font-size: 1rem;
+  color: var(--text3);
+  font-family: var(--mono);
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.logSumSub {
+  font-size: 1rem;
+  color: var(--text3);
+  font-family: var(--mono);
+  margin-top: 2px;
+}
+
+.logActions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.logCountLbl {
+  font-size: 1rem;
+  font-family: var(--mono);
+  color: var(--text3);
+  letter-spacing: 0.04em;
+}
+
+.logClearBtn {
+  padding: 4px 10px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  color: var(--text3);
+  font-size: 1rem;
+  font-family: var(--mono);
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover {
+    border-color: var(--red);
+    color: var(--red);
+  }
+}
+
+.logList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.logEntry {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 11px 14px;
+  display: grid;
+  grid-template-columns: auto 1fr repeat(5, auto) auto;
+  align-items: center;
+  gap: 12px;
+}
+
+.logTime {
+  font-family: var(--mono);
+  font-size: 1rem;
+  color: var(--text3);
+  white-space: nowrap;
+}
+
+.logEntryName {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.logEntryServing {
+  font-size: 0.75rem;
+  color: var(--text3);
+  font-family: var(--mono);
+}
+
+.logStat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logStatVal {
+  font-family: var(--mono);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.logStatLbl {
+  font-size: 0.75rem;
+  color: var(--text3);
+  font-family: var(--mono);
+}
+
+.logRemove {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  color: var(--text3);
+  cursor: pointer;
+  font-size: 13px;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: all 0.15s;
+  &:hover {
+    border-color: var(--red);
+    color: var(--red);
+  }
+}
+
+.logEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: var(--text3);
+  gap: 10px;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.logEmptyIcon {
+  font-size: 5rem;
+  opacity: 0.5;
+}

@@ -1248,7 +1248,7 @@ const INITIAL_LOG: LogEntry[] = [
   {
     id: "l7",
     foodId: "spinach",
-    name: "Spinach",
+    name: "🌿 Spinach",
     servings: 2,
     serving: "1 cup raw (30g)",
     time: "12:40",

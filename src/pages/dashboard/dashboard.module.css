@@ -1,7 +1,3 @@
-.pageInner {
-  padding: 24px 28px;
-}
-
 .dashTop {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

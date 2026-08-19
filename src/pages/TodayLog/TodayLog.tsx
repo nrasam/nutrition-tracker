@@ -2,6 +2,7 @@ import { GOALS } from "../../data/mockData";
 import type { LogEntry } from "../../types";
 
 import styles from "./TodayLog.module.css";
+import sharedStyles from "../shared.module.css";
 
 interface Totals {
   calories: number;
@@ -24,7 +25,7 @@ export default function TodayLog({
 }) {
   const goals = GOALS;
   return (
-    <div className={styles.pageInner}>
+    <div className={sharedStyles.pageInner}>
       {/* Total Summary strip */}
       <div className={styles.logSummaryBar}>
         {(
@@ -33,7 +34,7 @@ export default function TodayLog({
               label: "Calories",
               val: Math.round(totals.calories),
               goal: goals.calories,
-              unit: "kcal",
+              unit: "cal",
               color: "var(--yellow)",
             },
             {
@@ -122,7 +123,7 @@ export default function TodayLog({
               <div key={e.id} className={styles.logEntry}>
                 <span className={styles.logTime}>{e.time}</span>
                 <div>
-                  <div className={styles.logEntryName}>{e.name}</div>
+                  <div className={styles.logEntryName}>{e.name} [x{e.servings}]</div>
                   <div className={styles.logEntryServing}>
                     ×{e.servings} · {e.serving}
                   </div>
@@ -134,7 +135,7 @@ export default function TodayLog({
                   >
                     {cal}
                   </span>
-                  <span className={styles.logStatLbl}>kcal</span>
+                  <span className={styles.logStatLbl}>cal</span>
                 </div>
                 <div className={styles.logStat}>
                   <span

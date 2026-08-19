@@ -1,4 +1,5 @@
 import styles from "./dashboard.module.css";
+import sharedStyles from "../shared.module.css";
 
 import {
   TODAY_INTAKE,
@@ -61,7 +62,7 @@ export default function Dashboard() {
   const dashMicros = MICROS.slice(0, 6);
 
   return (
-    <div className={styles.pageInner}>
+    <div className={sharedStyles.pageInner}>
       <div className={styles.dashTop}>
         {/* Calorie Card */}
         <div className={`${styles.card} ${styles.calCard}`}>
