@@ -34,6 +34,13 @@ export default function Layout() {
             <span className="nav-icon">⊞</span>
             <span>Food Library</span>
           </NavLink>
+          <NavLink
+            to="/log"
+            className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
+          >
+            <span className="nav-icon">◷</span>
+            <span>Today's Log</span>
+          </NavLink>
         </nav>
         {/* sidebar footer */}
         <div className="sidebar-footer">
