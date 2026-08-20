@@ -18,6 +18,7 @@ export default function Foods() {
   const [sortBy, setSortBy] = useState<SortKey>("name");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
   const [showAddFood, setShowAddFood] = useState(false);
+  const [foodToEat, setFoodToEat] = useState<Food | null>(null);
 
   const sorted = useMemo(() => {
     let list = foods.filter((food) => {
@@ -126,7 +127,8 @@ export default function Foods() {
               </button>
             ))}
           </div>
-          {/* List */}
+
+          {/* Food List */}
           <div
             className={sharedStyles.scrollable}
             style={{ paddingRight: "28px" }}
@@ -198,6 +200,15 @@ export default function Foods() {
                     </span>
                     <span className={styles.foodStatLbl}>fiber</span>
                   </div>
+                  <button
+                    className={styles.eatBtn}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setFoodToEat(food);
+                    }}
+                  >
+                    Eat
+                  </button>
                 </div>
               ))}
               {/* If no foods match */}
@@ -378,6 +389,8 @@ export default function Foods() {
           onAdd={(food) => setFoods((prev) => [...prev, food])}
         />
       )}
+      {/* Eat food modal */}
+      {foodToEat && <div>{foodToEat.name}</div>}
     </>
   );
 }
