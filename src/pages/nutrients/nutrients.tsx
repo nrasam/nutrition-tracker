@@ -1,15 +1,14 @@
 import styles from "./nutrients.module.css";
 import sharedStyles from "../shared.module.css";
 
-import { MICROS } from "../../data/mockData";
-
 import { statusColor, formatMicro } from "../pagesHelpers";
 import { useState } from "react";
+import type { Micro } from "../../types";
 
-export default function Nutrients() {
+export default function Nutrients({ microList }: { microList: Micro[] }) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   // Return null instead of undefined if you can't find the nutrient
-  const selected = MICROS.find((micro) => micro.id === selectedId) ?? null;
+  const selected = microList.find((micro) => micro.id === selectedId) ?? null;
   // Get greatest amount of micronutrient from the selected nutrient's food sources
   const maxSource = selected
     ? Math.max(...selected.sources.map((s) => s.amount))
@@ -23,7 +22,7 @@ export default function Nutrients() {
   const [unmetOnly, setUnmetOnly] = useState(false);
   const [sortBy, setSortBy] = useState<"desc" | "asc" | "name">("name");
 
-  let nutrients = MICROS.filter((micro) => {
+  let nutrients = microList.filter((micro) => {
     const matchSearch = micro.name
       .toLocaleLowerCase()
       .includes(search.toLocaleLowerCase());

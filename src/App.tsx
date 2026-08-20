@@ -9,7 +9,7 @@ import "./App.css";
 import TodayLog from "./pages/TodayLog/TodayLog";
 import { useMemo, useState } from "react";
 import type { Totals, LogEntry } from "./types";
-import { INITIAL_LOG } from "./data/mockData";
+import { INITIAL_LOG, MICROS } from "./data/mockData";
 
 export default function App() {
   const [log, setLog] = useState<LogEntry[]>(INITIAL_LOG);
@@ -41,6 +41,12 @@ export default function App() {
     return total;
   }, [log]);
 
+  // Merge microTotals into MICRO list
+  const microList = useMemo(
+    () => MICROS.map((m) => ({ ...m, current: microTotals[m.id] ?? 0 })),
+    [microTotals],
+  );
+
   function handleRemove(id: string) {}
 
   return (
@@ -50,7 +56,7 @@ export default function App() {
           index
           element={<Dashboard totals={macroTotals} microTotals={microTotals} />}
         />
-        <Route path="nutrients" element={<Nutrients />} />
+        <Route path="nutrients" element={<Nutrients microList={microList} />} />
         <Route path="foods" element={<Foods />} />
         <Route
           path="log"
