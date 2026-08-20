@@ -68,7 +68,16 @@ export default function Dashboard({
     },
   ];
 
-  const dashMicros = MICROS.slice(0, 6);
+  const favMicros = [
+    "vitaminD",
+    "vitaminC",
+    "iron",
+    "calcium",
+    "magnesium",
+    "omega3",
+  ];
+
+  const dashMicros = MICROS.filter((m) => favMicros.includes(m.id));
 
   return (
     <div className={sharedStyles.pageInner}>
