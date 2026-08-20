@@ -1,11 +1,12 @@
 import styles from "./foods.module.css";
 import sharedStyles from "../shared.module.css";
 
-import type { Food } from "../../types";
+import type { Food, LogEntry } from "../../types";
 import { INITIAL_FOODS } from "../../data/mockData";
 import { useState, useMemo } from "react";
 import { formatMicro } from "../pagesHelpers";
 import { AddFood } from "../../components/modals/AddFood";
+import EatFood from "../../components/modals/EatFood";
 
 type SortKey = "name" | "calories" | "protein" | "carbs" | "fat" | "fiber";
 
@@ -65,6 +66,8 @@ export default function Foods() {
       setSortDir(key === "name" ? "asc" : "desc");
     }
   }
+
+  function onEat(entry: LogEntry) {}
 
   return (
     <>
@@ -390,7 +393,13 @@ export default function Foods() {
         />
       )}
       {/* Eat food modal */}
-      {foodToEat && <div>{foodToEat.name}</div>}
+      {foodToEat && (
+        <EatFood
+          food={foodToEat}
+          onClose={() => setFoodToEat(null)}
+          onConfirm={onEat}
+        />
+      )}
     </>
   );
 }

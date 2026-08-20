@@ -331,3 +331,80 @@
   margin-top: 0.25rem;
   display: block;
 }
+
+.eatFoodName {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.eatServingLbl {
+  font-size: 11px;
+  color: var(--text3);
+  font-family: var(--mono);
+  margin-bottom: 16px;
+}
+
+.eatServingsRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.eatServingsRow label {
+  font-size: 11px;
+  font-family: var(--mono);
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+.eatServingsInput {
+  width: 80px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: var(--r-sm);
+  padding: 7px 10px;
+  font-size: 14px;
+  font-family: var(--mono);
+  font-weight: 600;
+  outline: none;
+  transition: border-color 0.15s;
+
+  &:focus {
+    border-color: var(--green);
+  }
+}
+
+.eatPreview {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  background: var(--bg3);
+  border-radius: var(--r-sm);
+  padding: 12px;
+}
+
+.eatPrevTile {
+  text-align: center;
+}
+
+.eatPrevVal {
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1;
+}
+
+.eatPrevLbl {
+  font-size: 9px;
+  color: var(--text3);
+  font-family: var(--mono);
+  margin-top: 3px;
+  text-transform: uppercase;
+}

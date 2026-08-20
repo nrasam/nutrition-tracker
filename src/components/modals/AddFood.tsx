@@ -1,5 +1,5 @@
 import type { FoodNutrient, Food } from "../../types";
-import styles from "./AddFood.module.css";
+import styles from "./modal.module.css";
 
 import { useState } from "react";
 
