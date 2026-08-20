@@ -225,3 +225,13 @@
 .page-inner {
   padding: 24px 28px;
 }
+
+.log-count {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 1rem;
+  background: var(--blue-bg);
+  color: var(--blue);
+  border-radius: 3px;
+  padding: 1px 5px;
+}

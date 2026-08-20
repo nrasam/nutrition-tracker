@@ -1,6 +1,6 @@
 import { NavLink, Outlet } from "react-router-dom";
 
-export default function Layout() {
+export default function Layout({ logCount }: { logCount: number }) {
   return (
     <div className="layout">
       <aside className="sidebar">
@@ -40,6 +40,7 @@ export default function Layout() {
           >
             <span className="nav-icon">◷</span>
             <span>Today's Log</span>
+            {logCount > 0 && <span className="log-count">{logCount}</span>}
           </NavLink>
         </nav>
         {/* sidebar footer */}

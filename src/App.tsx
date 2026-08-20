@@ -51,7 +51,7 @@ export default function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<Layout />}>
+      <Route path="/" element={<Layout logCount={log.length} />}>
         <Route
           index
           element={<Dashboard totals={macroTotals} microTotals={microTotals} />}
