@@ -13,7 +13,7 @@
 }
 
 .cardLbl {
-  font-size: 10px;
+  font-size: 1.25rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text3);
@@ -72,13 +72,13 @@
 }
 
 .calRowLbl {
-  font-size: 11px;
+  font-size: 0.75rem;
   color: var(--text3);
 }
 
 .calRowVal {
   font-family: var(--mono);
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 600;
   color: var(--text);
 }
@@ -98,20 +98,20 @@
 
 .deficitNum {
   font-family: var(--mono);
-  font-size: 30px;
+  font-size: 2rem;
   font-weight: 600;
   line-height: 1;
 }
 
 .deficitTag {
-  font-size: 12px;
+  font-size: 1rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
 
 .deficitDesc {
-  font-size: 12px;
+  font-size: 0.8rem;
   color: var(--text2);
   line-height: 1.5;
 }
@@ -128,9 +128,6 @@
   height: 100%;
   border-radius: 2px;
 }
-
-/* .wtCard {
-} */
 
 .wtCurrWeight {
   display: flex;
@@ -222,7 +219,7 @@
 }
 
 .macroName {
-  font-size: 10px;
+  font-size: 1rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text3);
@@ -239,20 +236,20 @@
 
 .macroCur {
   font-family: var(--mono);
-  font-size: 22px;
+  font-size: 1.25rem;
   font-weight: 600;
   color: var(--text);
   line-height: 1;
 }
 
 .macroUnit {
-  font-size: 11px;
+  font-size: 0.75rem;
   color: var(--text2);
 }
 
 .macroGoalTxt {
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 0.75rem;
   color: var(--text3);
   margin-left: auto;
 }
@@ -273,13 +270,13 @@
 
 .macroPct {
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 0.75rem;
   color: var(--text3);
   text-align: right;
 }
 
 .sectionLbl {
-  font-size: 10px;
+  font-size: 1rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text3);
@@ -307,7 +304,7 @@
 }
 
 .mdName {
-  font-size: 11px;
+  font-size: 1rem;
   font-weight: 600;
   color: var(--text);
   margin-bottom: 8px;
@@ -318,7 +315,7 @@
 
 .mdPct {
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 0.75rem;
   color: var(--text3);
 }
 
@@ -337,6 +334,6 @@
 
 .mdVals {
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 0.75rem;
   color: var(--text2);
 }

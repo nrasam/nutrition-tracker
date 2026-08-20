@@ -1,8 +1,10 @@
 import styles from "./dashboard.module.css";
 import sharedStyles from "../shared.module.css";
 
+import type { Totals } from "../../types";
+import { useNavigate } from "react-router-dom";
+
 import {
-  TODAY_INTAKE,
   GOALS,
   CURRENT_WEIGHT,
   GOAL_WEIGHT,
@@ -14,14 +16,21 @@ import Ring from "../../components/Ring";
 
 import { statusColor, formatMicro } from "../pagesHelpers";
 
-export default function Dashboard() {
-  const remaining = GOALS.calories - TODAY_INTAKE.calories;
+export default function Dashboard({
+  totals,
+  microTotals,
+}: {
+  totals: Totals;
+  microTotals: Record<string, number>;
+}) {
+  const navigate = useNavigate();
 
-  const calorieProgress = Math.round(
-    (TODAY_INTAKE.calories / GOALS.calories) * 100,
-  );
+  const remaining = GOALS.calories - totals.calories;
+  const calDeficit = 2350 - totals.calories;
 
-  const weightGainOrLossRate = ((remaining * 7) / 3500).toFixed(2);
+  const calorieProgress = Math.round((totals.calories / GOALS.calories) * 100);
+
+  const weightGainOrLossRate = ((calDeficit * 7) / 3500).toFixed(2);
   const weightGoalDiff = CURRENT_WEIGHT - GOAL_WEIGHT;
 
   const weightMin = Math.min(...WEIGHT_HISTORY);
@@ -31,28 +40,28 @@ export default function Dashboard() {
   const macros = [
     {
       name: "Protein",
-      cur: TODAY_INTAKE.protein,
+      cur: totals.protein,
       goal: GOALS.protein,
       unit: "g",
       color: "var(--green)",
     },
     {
       name: "Carbs",
-      cur: TODAY_INTAKE.carbs,
+      cur: totals.carbs,
       goal: GOALS.carbs,
       unit: "g",
       color: "var(--blue)",
     },
     {
       name: "Fat",
-      cur: TODAY_INTAKE.fat,
+      cur: totals.fat,
       goal: GOALS.fat,
       unit: "g",
       color: "var(--orange)",
     },
     {
       name: "Fiber",
-      cur: TODAY_INTAKE.fiber,
+      cur: totals.fiber,
       goal: GOALS.fiber,
       unit: "g",
       color: "var(--purple)",
@@ -68,13 +77,13 @@ export default function Dashboard() {
         <div className={`${styles.card} ${styles.calCard}`}>
           <div className={styles.ringWrap}>
             <Ring
-              value={TODAY_INTAKE.calories}
+              value={totals.calories}
               max={GOALS.calories}
               color="var(--yellow)"
             />
             <div className={styles.ringCenter}>
               <span className={styles.ringNum}>
-                {TODAY_INTAKE.calories.toLocaleString()}
+                {totals.calories.toLocaleString()}
               </span>
               <span className={styles.ringSub}>cal</span>
             </div>
@@ -91,7 +100,7 @@ export default function Dashboard() {
             <div className={styles.calRow}>
               <span className={styles.calRowLbl}>Consumed</span>
               <span className={styles.calRowVal}>
-                {TODAY_INTAKE.calories.toLocaleString()}
+                {totals.calories.toLocaleString()}
               </span>
             </div>
             <div className={styles.calRow}>
@@ -102,7 +111,7 @@ export default function Dashboard() {
                   color: remaining >= 0 ? "var(--green)" : "var(--red)",
                 }}
               >
-                {remaining}
+                {remaining.toLocaleString()}
               </span>
             </div>
             <div className={styles.calRow}>
@@ -122,19 +131,19 @@ export default function Dashboard() {
           <div className={styles.deficitMain}>
             <span
               className={styles.deficitNum}
-              style={{ color: remaining > 0 ? "var(--green)" : "var(--red)" }}
+              style={{ color: calDeficit > 0 ? "var(--green)" : "var(--red)" }}
             >
-              {remaining}
+              {calDeficit.toLocaleString()}
             </span>
             <span
               className={styles.deficitTag}
-              style={{ color: remaining > 0 ? "var(--green)" : "var(--red)" }}
+              style={{ color: calDeficit > 0 ? "var(--green)" : "var(--red)" }}
             >
-              cal {remaining > 0 ? "deficit" : "surplus"}
+              cal {calDeficit > 0 ? "deficit" : "surplus"}
             </span>
           </div>
           <div className={styles.deficitDesc}>
-            {remaining > 0
+            {calDeficit > 0
               ? `At this rate you'll lose ~${weightGainOrLossRate} lbs/week. ${weightGoalDiff > 0 ? `${weightGoalDiff.toFixed(1)} lbs to goal.` : "At goal weight!"}`
               : `Calorie surplus today — add an activity to stay on track.`}
           </div>
@@ -220,13 +229,17 @@ export default function Dashboard() {
       {/* Key Micros */}
       <div className={styles.sectionLbl}>
         Key Micronutrients -{" "}
-        <span style={{ color: "var(--blue)", cursor: "pointer" }}>
+        <span
+          style={{ color: "var(--blue)", cursor: "pointer" }}
+          onClick={() => navigate("/nutrients")}
+        >
           view all →
         </span>
       </div>
       <div className={styles.microsDashGrid}>
         {dashMicros.map((micro) => {
-          const p = Math.round((micro.current / micro.goal) * 100);
+          const cur = microTotals[micro.id] ?? 0;
+          const p = Math.round((cur / micro.goal) * 100);
           const color = statusColor(p);
           return (
             <div key={micro.id} className={styles.mdCard}>
@@ -243,8 +256,7 @@ export default function Dashboard() {
                 />
               </div>
               <div className={styles.mdVals}>
-                {formatMicro(micro.current)} / {formatMicro(micro.goal)}{" "}
-                {micro.unit}
+                {formatMicro(cur)} / {formatMicro(micro.goal)} {micro.unit}
               </div>
             </div>
           );

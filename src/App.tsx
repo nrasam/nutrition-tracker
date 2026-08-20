@@ -7,21 +7,49 @@ import Layout from "./components/layout";
 
 import "./App.css";
 import TodayLog from "./pages/TodayLog/TodayLog";
-import { useState } from "react";
-import type { LogEntry } from "./types";
+import { useMemo, useState } from "react";
+import type { Totals, LogEntry } from "./types";
 import { INITIAL_LOG } from "./data/mockData";
 
 export default function App() {
   const [log, setLog] = useState<LogEntry[]>(INITIAL_LOG);
 
-  const totals = { calories: 0, protein: 0, carbs: 0, fat: 0, fiber: 0 };
+  const macroTotals = useMemo<Totals>(
+    () =>
+      log.reduce(
+        (acc, entry) => ({
+          calories: acc.calories + entry.calories * entry.servings,
+          protein: acc.protein + entry.protein * entry.servings,
+          carbs: acc.carbs + entry.carbs * entry.servings,
+          fat: acc.fat + entry.fat * entry.servings,
+          fiber: acc.fiber + entry.fiber * entry.servings,
+        }),
+        { calories: 0, protein: 0, carbs: 0, fat: 0, fiber: 0 },
+      ),
+    [log],
+  );
+
+  // Calculate total micros
+  const microTotals = useMemo<Record<string, number>>(() => {
+    const total: Record<string, number> = {};
+    log.forEach((entry) => {
+      entry.nutrients.forEach((nutrient) => {
+        total[nutrient.key] =
+          (total[nutrient.key] ?? 0) + nutrient.value * entry.servings;
+      });
+    });
+    return total;
+  }, [log]);
 
   function handleRemove(id: string) {}
 
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
-        <Route index element={<Dashboard />} />
+        <Route
+          index
+          element={<Dashboard totals={macroTotals} microTotals={microTotals} />}
+        />
         <Route path="nutrients" element={<Nutrients />} />
         <Route path="foods" element={<Foods />} />
         <Route
@@ -29,7 +57,7 @@ export default function App() {
           element={
             <TodayLog
               log={log}
-              totals={totals}
+              totals={macroTotals}
               onRemove={handleRemove}
               onClear={() => setLog([])}
             />

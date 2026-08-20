@@ -1,16 +1,8 @@
 import { GOALS } from "../../data/mockData";
-import type { LogEntry } from "../../types";
+import type { LogEntry, Totals } from "../../types";
 
 import styles from "./TodayLog.module.css";
 import sharedStyles from "../shared.module.css";
-
-interface Totals {
-  calories: number;
-  protein: number;
-  carbs: number;
-  fat: number;
-  fiber: number;
-}
 
 export default function TodayLog({
   log,
@@ -75,7 +67,7 @@ export default function TodayLog({
         ).map((total) => (
           <div key={total.label} className={styles.logSumTile}>
             <div className={styles.logSumVal} style={{ color: total.color }}>
-              {total.val}
+              {total.val.toLocaleString()}
             </div>
             <div className={styles.logSumLbl}>{total.label}</div>
             <div className={styles.logSumSub}>
@@ -123,7 +115,9 @@ export default function TodayLog({
               <div key={e.id} className={styles.logEntry}>
                 <span className={styles.logTime}>{e.time}</span>
                 <div>
-                  <div className={styles.logEntryName}>{e.name} [x{e.servings}]</div>
+                  <div className={styles.logEntryName}>
+                    {e.name} [x{e.servings}]
+                  </div>
                   <div className={styles.logEntryServing}>
                     ×{e.servings} · {e.serving}
                   </div>

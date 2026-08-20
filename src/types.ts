@@ -53,3 +53,11 @@ export interface LogEntry {
   fiber: number;
   nutrients: FoodNutrient[];
 }
+
+export interface Totals {
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+  fiber: number;
+}
