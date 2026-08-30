@@ -6,13 +6,13 @@ import sharedStyles from "../shared.module.css";
 
 export default function TodayLog({
   log,
-  onRemove,
   onClear,
+  onClearAll,
   totals,
 }: {
   log: LogEntry[];
-  onRemove: (id: string) => void;
-  onClear: () => void;
+  onClear: (id: string) => void;
+  onClearAll: () => void;
   totals: Totals;
 }) {
   const goals = GOALS;
@@ -85,7 +85,7 @@ export default function TodayLog({
         </span>
         {/* Clear All button */}
         {log.length > 0 && (
-          <button className={styles.logClearBtn} onClick={onClear}>
+          <button className={styles.logClearBtn} onClick={onClearAll}>
             Clear all
           </button>
         )}
@@ -169,7 +169,7 @@ export default function TodayLog({
                 </div>
                 <button
                   className={styles.logRemove}
-                  onClick={() => onRemove(e.id)}
+                  onClick={() => onClear(e.id)}
                 >
                   ×
                 </button>

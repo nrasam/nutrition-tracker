@@ -47,7 +47,9 @@ export default function App() {
     [microTotals],
   );
 
-  function handleRemove(id: string) {}
+  function handleClear(id: string) {
+    setLog((prev) => prev.filter((entry) => entry.id !== id));
+  }
 
   return (
     <Routes>
@@ -64,8 +66,8 @@ export default function App() {
             <TodayLog
               log={log}
               totals={macroTotals}
-              onRemove={handleRemove}
-              onClear={() => setLog([])}
+              onClear={handleClear}
+              onClearAll={() => setLog([])}
             />
           }
         />
