@@ -9,7 +9,7 @@ import "./App.css";
 import TodayLog from "./pages/TodayLog/TodayLog";
 import { useMemo, useState } from "react";
 import type { Totals, LogEntry } from "./types";
-import { INITIAL_LOG, MICROS } from "./data/mockData";
+import { MICROS } from "./data/mockData";
 
 export default function App() {
   const [log, setLog] = useState<LogEntry[]>([]);

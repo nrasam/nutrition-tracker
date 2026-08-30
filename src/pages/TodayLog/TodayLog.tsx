@@ -115,9 +115,7 @@ export default function TodayLog({
               <div key={e.id} className={styles.logEntry}>
                 <span className={styles.logTime}>{e.time}</span>
                 <div>
-                  <div className={styles.logEntryName}>
-                    {e.name} [x{e.servings}]
-                  </div>
+                  <div className={styles.logEntryName}>{e.name}</div>
                   <div className={styles.logEntryServing}>
                     ×{e.servings} · {e.serving}
                   </div>

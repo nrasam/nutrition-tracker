@@ -1,6 +1,25 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
+
+// Associates a page title to a pathname
+const pageTitles: Record<string, string> = {
+  "/": "Dashboard",
+  "/nutrients": "Micronutrients",
+  "/foods": "Food Library",
+  "/log": "Today's Log",
+};
 
 export default function Layout({ logCount }: { logCount: number }) {
+  const location = useLocation();
+  // Finds the corresponding page title
+  const pageTitle = pageTitles[location.pathname] ?? "Page Title Not Found";
+
+  const today = new Date().toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+
   return (
     <div className="layout">
       <aside className="sidebar">
@@ -59,8 +78,8 @@ export default function Layout({ logCount }: { logCount: number }) {
       <main className="main">
         {/* page header */}
         <div className="page-header">
-          <span className="page-title">PAGE_TITLE</span>
-          <span className="page-date">07/15/2026</span>
+          <span className="page-title">{pageTitle}</span>
+          <span className="page-date">{today.toUpperCase()}</span>
         </div>
         {/* Page body */}
         <div className="page-body">

@@ -2,8 +2,6 @@ import type { Food, Micro, LogEntry } from "../types";
 
 const GOALS = { calories: 2150, protein: 145, carbs: 250, fat: 70, fiber: 35 };
 
-const WATER_GOAL = 2500;
-
 const CURRENT_WEIGHT = 146.6;
 
 const GOAL_WEIGHT = 140;
@@ -1331,7 +1329,6 @@ const INITIAL_LOG: LogEntry[] = [
 
 export {
   GOALS,
-  WATER_GOAL,
   CURRENT_WEIGHT,
   GOAL_WEIGHT,
   WEIGHT_HISTORY,
