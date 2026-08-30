@@ -10,6 +10,7 @@ import TodayLog from "./pages/TodayLog/TodayLog";
 import { useMemo, useState } from "react";
 import type { Totals, LogEntry } from "./types";
 import { MICROS } from "./data/mockData";
+import Settings from "./pages/settings/Settings";
 
 export default function App() {
   const [log, setLog] = useState<LogEntry[]>([]);
@@ -75,6 +76,7 @@ export default function App() {
             />
           }
         />
+        <Route path="settings" element={<Settings />} />
       </Route>
     </Routes>
   );

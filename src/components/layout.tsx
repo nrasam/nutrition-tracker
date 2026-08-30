@@ -6,6 +6,7 @@ const pageTitles: Record<string, string> = {
   "/nutrients": "Micronutrients",
   "/foods": "Food Library",
   "/log": "Today's Log",
+  "/settings": "Set Goals",
 };
 
 export default function Layout({ logCount }: { logCount: number }) {
@@ -60,6 +61,13 @@ export default function Layout({ logCount }: { logCount: number }) {
             <span className="nav-icon">◷</span>
             <span>Today's Log</span>
             {logCount > 0 && <span className="log-count">{logCount}</span>}
+          </NavLink>
+          <NavLink
+            to="/settings"
+            className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
+          >
+            <span className="nav-icon">⚙</span>
+            <span>Settings</span>
           </NavLink>
         </nav>
         {/* sidebar footer */}

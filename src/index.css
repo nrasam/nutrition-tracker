@@ -192,14 +192,14 @@
 }
 
 .page-title {
-  font-size: 15px;
+  font-size: 1.25rem;
   font-weight: 600;
   color: var(--text);
 }
 
 .page-date {
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 0.75rem;
   color: var(--text3);
   letter-spacing: 0.05em;
 }
