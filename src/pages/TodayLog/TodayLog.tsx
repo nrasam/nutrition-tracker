@@ -69,9 +69,9 @@ export default function TodayLog({
             <div className={styles.logSumVal} style={{ color: total.color }}>
               {total.val.toLocaleString()}
             </div>
-            <div className={styles.logSumLbl}>{total.label}</div>
             <div className={styles.logSumSub}>
-              / {total.goal} {total.unit}
+              <div className={styles.logSumLbl}>{total.label}</div>/{" "}
+              {total.goal} {total.unit}
             </div>
           </div>
         ))}

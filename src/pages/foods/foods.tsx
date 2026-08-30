@@ -10,7 +10,7 @@ import EatFood from "../../components/modals/EatFood";
 
 type SortKey = "name" | "calories" | "protein" | "carbs" | "fat" | "fiber";
 
-export default function Foods() {
+export default function Foods({ onEat }: { onEat: (entry: LogEntry) => void }) {
   const [foods, setFoods] = useState<Food[]>(INITIAL_FOODS);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [stockFilter, setStockFilter] = useState(false);
@@ -66,8 +66,6 @@ export default function Foods() {
       setSortDir(key === "name" ? "asc" : "desc");
     }
   }
-
-  function onEat(entry: LogEntry) {}
 
   return (
     <>

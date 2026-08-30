@@ -12,7 +12,7 @@ import type { Totals, LogEntry } from "./types";
 import { INITIAL_LOG, MICROS } from "./data/mockData";
 
 export default function App() {
-  const [log, setLog] = useState<LogEntry[]>(INITIAL_LOG);
+  const [log, setLog] = useState<LogEntry[]>([]);
 
   const macroTotals = useMemo<Totals>(
     () =>
@@ -51,6 +51,10 @@ export default function App() {
     setLog((prev) => prev.filter((entry) => entry.id !== id));
   }
 
+  function handleEat(entry: LogEntry) {
+    setLog((prev) => [...prev, entry]);
+  }
+
   return (
     <Routes>
       <Route path="/" element={<Layout logCount={log.length} />}>
@@ -59,7 +63,7 @@ export default function App() {
           element={<Dashboard totals={macroTotals} microTotals={microTotals} />}
         />
         <Route path="nutrients" element={<Nutrients microList={microList} />} />
-        <Route path="foods" element={<Foods />} />
+        <Route path="foods" element={<Foods onEat={handleEat} />} />
         <Route
           path="log"
           element={

@@ -19,7 +19,26 @@ export default function EatFood({
   const fat = Math.round(food.fat * servings * 10) / 10;
   const fib = Math.round(food.fiber * servings * 10) / 10;
 
-  function handleLog() {}
+  function handleLog() {
+    const now = new Date();
+    const time = now.toTimeString().slice(0, 5);
+    const entry: LogEntry = {
+      id: `log-${Date.now()}`,
+      foodId: food.id,
+      name: food.name,
+      servings,
+      serving: food.serving,
+      time,
+      calories: food.calories,
+      protein: food.protein,
+      carbs: food.carbs,
+      fat: food.fat,
+      fiber: food.fiber,
+      nutrients: food.nutrients,
+    };
+    onConfirm(entry);
+    onClose();
+  }
 
   return (
     <div
