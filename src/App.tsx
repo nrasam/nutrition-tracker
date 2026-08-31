@@ -7,15 +7,20 @@ import Layout from "./components/layout";
 
 import "./App.css";
 import TodayLog from "./pages/TodayLog/TodayLog";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import type { Totals, LogEntry, Goals } from "./types";
 import { MICROS, INITIAL_GOALS, CURRENT_WEIGHT } from "./data/mockData";
 import Settings from "./pages/settings/Settings";
 
+import { useLocalStorage } from "./hooks/useLocalStorage";
+
 export default function App() {
-  const [log, setLog] = useState<LogEntry[]>([]);
-  const [goals, setGoals] = useState<Goals>(INITIAL_GOALS);
-  const [currentWeight, setCurrWeight] = useState<number>(CURRENT_WEIGHT);
+  const [log, setLog] = useLocalStorage<LogEntry[]>("nutrition-log", []);
+  const [goals, setGoals] = useLocalStorage<Goals>("goals", INITIAL_GOALS);
+  const [currentWeight, setCurrWeight] = useLocalStorage<number>(
+    "current-weight",
+    CURRENT_WEIGHT,
+  );
 
   const macroTotals = useMemo<Totals>(
     () =>
