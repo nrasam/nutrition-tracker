@@ -77,7 +77,14 @@ export default function App() {
       >
         <Route
           index
-          element={<Dashboard totals={macroTotals} microTotals={microTotals} />}
+          element={
+            <Dashboard
+              totals={macroTotals}
+              microTotals={microTotals}
+              goals={goals}
+              currentWeight={currentWeight}
+            />
+          }
         />
         <Route path="nutrients" element={<Nutrients microList={microList} />} />
         <Route path="foods" element={<Foods onEat={handleEat} />} />

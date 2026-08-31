@@ -1,16 +1,10 @@
 import styles from "./dashboard.module.css";
 import sharedStyles from "../shared.module.css";
 
-import type { Totals } from "../../types";
+import type { Goals, Totals } from "../../types";
 import { useNavigate } from "react-router-dom";
 
-import {
-  GOALS,
-  CURRENT_WEIGHT,
-  GOAL_WEIGHT,
-  WEIGHT_HISTORY,
-  MICROS,
-} from "../../data/mockData";
+import { WEIGHT_HISTORY, MICROS } from "../../data/mockData";
 
 import Ring from "../../components/Ring";
 
@@ -19,19 +13,23 @@ import { statusColor, formatMicro } from "../pagesHelpers";
 export default function Dashboard({
   totals,
   microTotals,
+  goals,
+  currentWeight,
 }: {
   totals: Totals;
   microTotals: Record<string, number>;
+  goals: Goals;
+  currentWeight: number;
 }) {
   const navigate = useNavigate();
 
-  const remaining = GOALS.calories - totals.calories;
+  const remaining = goals.cal - totals.calories;
   const calDeficit = 2350 - totals.calories;
 
-  const calorieProgress = Math.round((totals.calories / GOALS.calories) * 100);
+  const calorieProgress = Math.round((totals.calories / goals.cal) * 100);
 
   const weightGainOrLossRate = ((calDeficit * 7) / 3500).toFixed(2);
-  const weightGoalDiff = CURRENT_WEIGHT - GOAL_WEIGHT;
+  const weightGoalDiff = currentWeight - goals.weight;
 
   const weightMin = Math.min(...WEIGHT_HISTORY);
   const weightMax = Math.max(...WEIGHT_HISTORY);
@@ -41,28 +39,28 @@ export default function Dashboard({
     {
       name: "Protein",
       cur: totals.protein,
-      goal: GOALS.protein,
+      goal: goals.protein,
       unit: "g",
       color: "var(--green)",
     },
     {
       name: "Carbs",
       cur: totals.carbs,
-      goal: GOALS.carbs,
+      goal: goals.carb,
       unit: "g",
       color: "var(--blue)",
     },
     {
       name: "Fat",
       cur: totals.fat,
-      goal: GOALS.fat,
+      goal: goals.fat,
       unit: "g",
       color: "var(--orange)",
     },
     {
       name: "Fiber",
       cur: totals.fiber,
-      goal: GOALS.fiber,
+      goal: goals.fiber,
       unit: "g",
       color: "var(--purple)",
     },
@@ -87,7 +85,7 @@ export default function Dashboard({
           <div className={styles.ringWrap}>
             <Ring
               value={totals.calories}
-              max={GOALS.calories}
+              max={goals.cal}
               color="var(--yellow)"
             />
             <div className={styles.ringCenter}>
@@ -103,7 +101,7 @@ export default function Dashboard({
             <div className={styles.calRow}>
               <span className={styles.calRowLbl}>Goal</span>
               <span className={styles.calRowVal}>
-                {GOALS.calories.toLocaleString()}
+                {goals.cal.toLocaleString()}
               </span>
             </div>
             <div className={styles.calRow}>
@@ -173,12 +171,12 @@ export default function Dashboard({
           <div className={styles.wtBody}>
             <div className={styles.wtMain}>
               <div className={styles.wtCurrWeight}>
-                <span className={styles.wtVal}>{CURRENT_WEIGHT}</span>
+                <span className={styles.wtVal}>{currentWeight}</span>
                 <span className={styles.wtUnit}>lbs</span>
               </div>
-              <div className={styles.wtGoal}>Goal: {GOAL_WEIGHT} lbs</div>
+              <div className={styles.wtGoal}>Goal: {goals.weight} lbs</div>
               <div className={styles.wtDelta}>
-                ▼ {(WEIGHT_HISTORY[0] - CURRENT_WEIGHT).toFixed(1)} lbs lost
+                ▼ {(WEIGHT_HISTORY[0] - currentWeight).toFixed(1)} lbs lost
               </div>
             </div>
             <div className={styles.sparkline}>
