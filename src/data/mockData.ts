@@ -1,4 +1,4 @@
-import type { Food, Micro, LogEntry } from "../types";
+import type { Food, Micro, LogEntry, Goals } from "../types";
 
 const GOALS = { calories: 2150, protein: 145, carbs: 250, fat: 70, fiber: 35 };
 
@@ -1327,6 +1327,15 @@ const INITIAL_LOG: LogEntry[] = [
   },
 ];
 
+const INITIAL_GOALS: Goals = {
+  weight: 140,
+  cal: 2150,
+  protein: 145,
+  carb: 250,
+  fat: 70,
+  fiber: 35,
+};
+
 export {
   GOALS,
   CURRENT_WEIGHT,
@@ -1335,4 +1344,5 @@ export {
   MICROS,
   INITIAL_FOODS,
   INITIAL_LOG,
+  INITIAL_GOALS,
 };

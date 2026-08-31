@@ -9,7 +9,15 @@ const pageTitles: Record<string, string> = {
   "/settings": "Set Goals",
 };
 
-export default function Layout({ logCount }: { logCount: number }) {
+export default function Layout({
+  logCount,
+  currWeight,
+  goalWeight,
+}: {
+  logCount: number;
+  currWeight: number;
+  goalWeight: number;
+}) {
   const location = useLocation();
   // Finds the corresponding page title
   const pageTitle = pageTitles[location.pathname] ?? "Page Title Not Found";
@@ -76,10 +84,10 @@ export default function Layout({ logCount }: { logCount: number }) {
           <div className="weight-badge">
             <div className="weight-badge-lbl">Current Weight</div>
             <div>
-              <span className="weight-badge-val">146</span>
+              <span className="weight-badge-val">{currWeight}</span>
               <span className="weight-badge-unit">lbs</span>
             </div>
-            <div className="weight-badge-goal">Goal: 140 lbs</div>
+            <div className="weight-badge-goal">Goal: {goalWeight} lbs</div>
           </div>
         </div>
       </aside>

@@ -1,0 +1,17 @@
+.goalInput {
+  margin-bottom: 20px;
+}
+
+.goalInput label {
+  margin-right: 20px;
+}
+
+.btnGroup {
+}
+
+.gridContainer {
+  display: grid;
+  grid-template-columns: 150px 150px 10px;
+  gap: 1em;
+  font-family: var(--mono);
+}

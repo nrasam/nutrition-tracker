@@ -8,12 +8,14 @@ import Layout from "./components/layout";
 import "./App.css";
 import TodayLog from "./pages/TodayLog/TodayLog";
 import { useMemo, useState } from "react";
-import type { Totals, LogEntry } from "./types";
-import { MICROS } from "./data/mockData";
+import type { Totals, LogEntry, Goals } from "./types";
+import { MICROS, INITIAL_GOALS, CURRENT_WEIGHT } from "./data/mockData";
 import Settings from "./pages/settings/Settings";
 
 export default function App() {
   const [log, setLog] = useState<LogEntry[]>([]);
+  const [goals, setGoals] = useState<Goals>(INITIAL_GOALS);
+  const [currentWeight, setCurrWeight] = useState<number>(CURRENT_WEIGHT);
 
   const macroTotals = useMemo<Totals>(
     () =>
@@ -56,9 +58,23 @@ export default function App() {
     setLog((prev) => [...prev, entry]);
   }
 
+  function handleSave(w: number, g: Goals) {
+    setGoals(g);
+    setCurrWeight(w);
+  }
+
   return (
     <Routes>
-      <Route path="/" element={<Layout logCount={log.length} />}>
+      <Route
+        path="/"
+        element={
+          <Layout
+            logCount={log.length}
+            currWeight={currentWeight}
+            goalWeight={goals.weight}
+          />
+        }
+      >
         <Route
           index
           element={<Dashboard totals={macroTotals} microTotals={microTotals} />}
@@ -76,7 +92,16 @@ export default function App() {
             />
           }
         />
-        <Route path="settings" element={<Settings />} />
+        <Route
+          path="settings"
+          element={
+            <Settings
+              goals={goals}
+              onSave={handleSave}
+              currWeightInitial={currentWeight}
+            />
+          }
+        />
       </Route>
     </Routes>
   );

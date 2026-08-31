@@ -61,3 +61,12 @@ export interface Totals {
   fat: number;
   fiber: number;
 }
+
+export interface Goals {
+  weight: number;
+  cal: number;
+  protein: number;
+  carb: number;
+  fat: number;
+  fiber: number;
+}
