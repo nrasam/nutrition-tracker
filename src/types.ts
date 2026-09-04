@@ -1,3 +1,17 @@
+export type MicroCategory = "VITAMINS" | "MINERALS" | "FATS" | "OTHER";
+export type FoodCategory =
+  | "DAIRY"
+  | "EGGS"
+  | "FISH_SEAFOOD"
+  | "FRUITS"
+  | "GRAINS"
+  | "LEGUMES"
+  | "NUTS_SEEDS"
+  | "POULTRY"
+  | "RED_MEAT"
+  | "VEGETABLES"
+  | "DRINKS";
+
 export interface FoodSource {
   food: string;
   amount: number;
@@ -16,27 +30,28 @@ export interface Micro {
 }
 
 export interface FoodNutrient {
-  key: string;
-  label: string;
-  value: number;
-  unit: string;
-  dailyMax?: number;
+  id: number;
+  foodId: number;
+  microId: number;
+  amount: number;
+  micro: Micro;
 }
 
 export interface Food {
-  id: string;
+  id: number;
   name: string;
-  category: string;
-  stocked: boolean;
-  serving: string;
+  category: FoodCategory;
+  serving: number;
+  unit: string;
   calories: number;
   protein: number;
   carbs: number;
   fat: number;
   fiber: number;
-  nutrients: FoodNutrient[];
   benefits: string[];
   warnings: string[];
+  stocked: boolean;
+  nutrients: FoodNutrient[];
 }
 
 export interface LogEntry {

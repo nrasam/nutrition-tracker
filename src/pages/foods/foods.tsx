@@ -10,9 +10,21 @@ import EatFood from "../../components/modals/EatFood";
 
 type SortKey = "name" | "calories" | "protein" | "carbs" | "fat" | "fiber";
 
-export default function Foods({ onEat }: { onEat: (entry: LogEntry) => void }) {
-  const [foods, setFoods] = useState<Food[]>(INITIAL_FOODS);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+export default function Foods({
+  foodsList,
+  loading,
+  onEat,
+}: {
+  foodsList: Food[];
+  loading: Boolean;
+  onEat: (entry: LogEntry) => void;
+}) {
+  if (loading) {
+    return <p>Loading foods...</p>;
+  }
+
+  const [foods, setFoods] = useState<Food[]>(foodsList);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
   const [stockFilter, setStockFilter] = useState(false);
   const [search, setSearch] = useState("");
   const [catFilter, setCatFilter] = useState("All");
@@ -163,7 +175,7 @@ export default function Foods({ onEat }: { onEat: (entry: LogEntry) => void }) {
                     >
                       {food.calories}
                     </span>
-                    <span className={styles.foodStatLbl}>kcal</span>
+                    <span className={styles.foodStatLbl}>cal</span>
                   </div>
                   <div className={styles.foodStat}>
                     <span
@@ -213,7 +225,7 @@ export default function Foods({ onEat }: { onEat: (entry: LogEntry) => void }) {
                 </div>
               ))}
               {/* If no foods match */}
-              {sorted.length === 0 && (
+              {sorted.length === 0 && !loading && (
                 <div
                   style={{
                     textAlign: "center",
@@ -249,7 +261,7 @@ export default function Foods({ onEat }: { onEat: (entry: LogEntry) => void }) {
                     >
                       {selected.calories}
                     </div>
-                    <div className={styles.macroTileLbl}>kcal</div>
+                    <div className={styles.macroTileLbl}>cal</div>
                   </div>
                   <div className={styles.macroTile}>
                     <div
@@ -298,12 +310,15 @@ export default function Foods({ onEat }: { onEat: (entry: LogEntry) => void }) {
                     <div className={styles.nutrientList}>
                       {/* Per nutrient */}
                       {selected.nutrients.map((nut) => {
-                        const max = nut.dailyMax ?? nut.value * 2;
-                        const percent = Math.min(100, (nut.value / max) * 100);
+                        const max = nut.micro.max ?? nut.amount * 2;
+                        const percent = Math.min(100, (nut.amount / max) * 100);
                         return (
-                          <div key={nut.label} className={styles.nutrientItem}>
+                          <div
+                            key={nut.micro.name}
+                            className={styles.nutrientItem}
+                          >
                             <span className={styles.nutrientLbl}>
-                              {nut.label}
+                              {nut.micro.name}
                             </span>
                             <div className={styles.nutrientTrack}>
                               <div
@@ -312,7 +327,7 @@ export default function Foods({ onEat }: { onEat: (entry: LogEntry) => void }) {
                               />
                             </div>
                             <span className={styles.nutrientVal}>
-                              {formatMicro(nut.value)} {nut.unit}
+                              {formatMicro(nut.amount)} {nut.micro.unit}
                             </span>
                           </div>
                         );

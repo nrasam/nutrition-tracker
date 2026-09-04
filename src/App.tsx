@@ -1,3 +1,4 @@
+import { useEffect, useState, useMemo } from "react";
 import { Routes, Route } from "react-router-dom";
 
 import Dashboard from "./pages/dashboard/dashboard";
@@ -7,20 +8,32 @@ import Layout from "./components/layout";
 
 import "./App.css";
 import TodayLog from "./pages/TodayLog/TodayLog";
-import { useMemo } from "react";
-import type { Totals, LogEntry, Goals } from "./types";
+import type { Food, Totals, LogEntry, Goals } from "./types";
 import { MICROS, INITIAL_GOALS, CURRENT_WEIGHT } from "./data/mockData";
 import Settings from "./pages/settings/Settings";
 
 import { useLocalStorage } from "./hooks/useLocalStorage";
+import { getFoods } from "./services/api";
 
 export default function App() {
+  const [foods, setFoods] = useState<Food[]>([]);
+  const [foodsLoading, setfoodsLoading] = useState(true);
   const [log, setLog] = useLocalStorage<LogEntry[]>("nutrition-log", []);
   const [goals, setGoals] = useLocalStorage<Goals>("goals", INITIAL_GOALS);
   const [currentWeight, setCurrWeight] = useLocalStorage<number>(
     "current-weight",
     CURRENT_WEIGHT,
   );
+
+  useEffect(() => {
+    getFoods()
+      .then((foods) => {
+        setFoods(foods);
+      })
+      .finally(() => {
+        setfoodsLoading(false);
+      });
+  }, []);
 
   const macroTotals = useMemo<Totals>(
     () =>
@@ -42,8 +55,8 @@ export default function App() {
     const total: Record<string, number> = {};
     log.forEach((entry) => {
       entry.nutrients.forEach((nutrient) => {
-        total[nutrient.key] =
-          (total[nutrient.key] ?? 0) + nutrient.value * entry.servings;
+        total[nutrient.id] =
+          (total[nutrient.id] ?? 0) + nutrient.amount * entry.servings;
       });
     });
     return total;
@@ -92,7 +105,12 @@ export default function App() {
           }
         />
         <Route path="nutrients" element={<Nutrients microList={microList} />} />
-        <Route path="foods" element={<Foods onEat={handleEat} />} />
+        <Route
+          path="foods"
+          element={
+            <Foods foodsList={foods} loading={foodsLoading} onEat={handleEat} />
+          }
+        />
         <Route
           path="log"
           element={
