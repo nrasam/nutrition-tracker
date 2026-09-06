@@ -3,7 +3,7 @@ import sharedStyles from "../shared.module.css";
 
 import { statusColor, formatMicro } from "../pagesHelpers";
 import { useState } from "react";
-import type { Micro } from "../../types";
+import type { Micro, MicroCategory } from "../../types";
 
 export default function Nutrients({ microList }: { microList: Micro[] }) {
   const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -18,7 +18,7 @@ export default function Nutrients({ microList }: { microList: Micro[] }) {
     : 0;
 
   const [search, setSearch] = useState("");
-  const [catFilter, setCatFilter] = useState<string>("All");
+  const [catFilter, setCatFilter] = useState<string>("ALL");
   const [unmetOnly, setUnmetOnly] = useState(false);
   const [sortBy, setSortBy] = useState<"desc" | "asc" | "name">("name");
 
@@ -26,7 +26,7 @@ export default function Nutrients({ microList }: { microList: Micro[] }) {
     const matchSearch = micro.name
       .toLocaleLowerCase()
       .includes(search.toLocaleLowerCase());
-    const matchCat = catFilter === "All" || micro.category === catFilter;
+    const matchCat = catFilter === "ALL" || micro.category === catFilter;
     const matchUnmet = !unmetOnly || micro.current / micro.goal < 1;
     return matchSearch && matchCat && matchUnmet;
   });
@@ -65,10 +65,11 @@ export default function Nutrients({ microList }: { microList: Micro[] }) {
             value={catFilter}
             onChange={(e) => setCatFilter(e.target.value)}
           >
-            <option value="All">All</option>
-            <option value="Vitamins">Vitamins</option>
-            <option value="Minerals">Minerals</option>
-            <option value="Fats">Fats</option>
+            <option value="ALL">All</option>
+            <option value="FATS">Fats</option>
+            <option value="MINERALS">Minerals</option>
+            <option value="VITAMINS">Vitamins</option>
+            <option value="OTHER">Other</option>
           </select>
           <button
             className={`${sharedStyles.toggleBtn} ${unmetOnly ? sharedStyles.active : ""}`}
@@ -233,7 +234,7 @@ export default function Nutrients({ microList }: { microList: Micro[] }) {
                       </div>
                     </div>
                     <span className={styles.srcVal}>
-                      {formatMicro(source.amount)} {source.food.unit}
+                      {formatMicro(source.food.serving)} {source.food.unit}
                     </span>
                   </div>
                 ))}
