@@ -1,5 +1,5 @@
 import { GOALS } from "../../data/mockData";
-import type { LogEntry, Totals } from "../../types";
+import type { FoodEntry, Totals } from "../../types";
 
 import styles from "./TodayLog.module.css";
 import sharedStyles from "../shared.module.css";
@@ -10,8 +10,8 @@ export default function TodayLog({
   onClearAll,
   totals,
 }: {
-  log: LogEntry[];
-  onClear: (id: string) => void;
+  log: FoodEntry[];
+  onClear: (id: number) => void;
   onClearAll: () => void;
   totals: Totals;
 }) {
@@ -113,11 +113,15 @@ export default function TodayLog({
             const fiber = Math.round(e.fiber * e.servings * 10) / 10;
             return (
               <div key={e.id} className={styles.logEntry}>
-                <span className={styles.logTime}>{e.time}</span>
+                <span className={styles.logTime}>
+                  {e.loggedAt.toLocaleDateString()}
+                </span>
                 <div>
-                  <div className={styles.logEntryName}>{e.name}</div>
+                  <div className={styles.logEntryName}>
+                    {e.food?.name ?? "Food no longer exists"}
+                  </div>
                   <div className={styles.logEntryServing}>
-                    ×{e.servings} · {e.serving}
+                    ×{e.servings} · {e.food?.serving ?? "Unit"}
                   </div>
                 </div>
                 <div className={styles.logStat}>

@@ -19,24 +19,18 @@ export interface FoodSource {
 }
 
 export interface Micro {
-  id: string;
+  id: number;
   name: string;
   unit: string;
-  current: number;
+  limit?: number;
   goal: number;
-  max?: number;
-  sources: FoodSource[];
-  category: "Vitamins" | "Minerals" | "Fats";
+  benefits: string[];
+  warnings: string[];
+  category: MicroCategory;
+  foodEntryNutrients: FoodEntryNutrient[];
+  foodNutrients: FoodNutrient[];
+  current: number;
 }
-
-export interface FoodNutrient {
-  id: number;
-  foodId: number;
-  microId: number;
-  amount: number;
-  micro: Micro;
-}
-
 export interface Food {
   id: number;
   name: string;
@@ -53,20 +47,37 @@ export interface Food {
   stocked: boolean;
   nutrients: FoodNutrient[];
 }
+export interface FoodNutrient {
+  id: number;
+  foodId: number;
+  microId: number;
+  amount: number;
+  micro: Micro;
+  food: Food;
+}
 
-export interface LogEntry {
-  id: string;
-  foodId: string;
-  name: string;
+export interface FoodEntry {
+  id: number;
+  foodId?: number;
   servings: number;
-  serving: string;
-  time: string;
+  loggedAt: Date;
   calories: number;
   protein: number;
   carbs: number;
   fat: number;
   fiber: number;
-  nutrients: FoodNutrient[];
+  food?: Food;
+  foodEntryNutrients: FoodEntryNutrient[];
+}
+
+export interface FoodEntryNutrient {
+  id: number;
+  foodEntryId: number;
+  microId: number;
+  amount: number;
+
+  foodEntry: FoodEntry;
+  micro: Micro;
 }
 
 export interface Totals {

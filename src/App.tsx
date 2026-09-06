@@ -8,17 +8,25 @@ import Layout from "./components/layout";
 
 import "./App.css";
 import TodayLog from "./pages/TodayLog/TodayLog";
-import type { Food, Totals, LogEntry, Goals } from "./types";
-import { MICROS, INITIAL_GOALS, CURRENT_WEIGHT } from "./data/mockData";
+import {
+  type Food,
+  type Totals,
+  type FoodEntry,
+  type Goals,
+  type Micro,
+} from "./types";
+import { INITIAL_GOALS, CURRENT_WEIGHT } from "./data/mockData";
 import Settings from "./pages/settings/Settings";
 
 import { useLocalStorage } from "./hooks/useLocalStorage";
-import { getFoods } from "./services/api";
+import { getFoods, getMicros } from "./services/api";
 
 export default function App() {
   const [foods, setFoods] = useState<Food[]>([]);
   const [foodsLoading, setfoodsLoading] = useState(true);
-  const [log, setLog] = useLocalStorage<LogEntry[]>("nutrition-log", []);
+  const [micros, setMicros] = useState<Micro[]>([]);
+
+  const [log, setLog] = useLocalStorage<FoodEntry[]>("nutrition-log", []);
   const [goals, setGoals] = useLocalStorage<Goals>("goals", INITIAL_GOALS);
   const [currentWeight, setCurrWeight] = useLocalStorage<number>(
     "current-weight",
@@ -33,6 +41,10 @@ export default function App() {
       .finally(() => {
         setfoodsLoading(false);
       });
+
+    getMicros().then((micros) => {
+      setMicros(micros);
+    });
   }, []);
 
   const macroTotals = useMemo<Totals>(
@@ -51,12 +63,13 @@ export default function App() {
   );
 
   // Calculate total micros
-  const microTotals = useMemo<Record<string, number>>(() => {
-    const total: Record<string, number> = {};
+  const microTotals = useMemo<Record<number, number>>(() => {
+    const total: Record<number, number> = {};
+
     log.forEach((entry) => {
-      entry.nutrients.forEach((nutrient) => {
-        total[nutrient.id] =
-          (total[nutrient.id] ?? 0) + nutrient.amount * entry.servings;
+      entry.foodEntryNutrients.forEach((fen) => {
+        total[fen.microId] =
+          (total[fen.microId] ?? 0) + fen.amount * entry.servings;
       });
     });
     return total;
@@ -64,15 +77,15 @@ export default function App() {
 
   // Merge microTotals into MICRO list
   const microList = useMemo(
-    () => MICROS.map((m) => ({ ...m, current: microTotals[m.id] ?? 0 })),
-    [microTotals],
+    () => micros.map((m) => ({ ...m, current: microTotals[m.id] ?? 0 })),
+    [micros, microTotals],
   );
 
-  function handleClear(id: string) {
+  function handleClear(id: number) {
     setLog((prev) => prev.filter((entry) => entry.id !== id));
   }
 
-  function handleEat(entry: LogEntry) {
+  function handleEat(entry: FoodEntry) {
     setLog((prev) => [...prev, entry]);
   }
 

@@ -6,12 +6,12 @@ import { useState } from "react";
 import type { Micro } from "../../types";
 
 export default function Nutrients({ microList }: { microList: Micro[] }) {
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
   // Return null instead of undefined if you can't find the nutrient
   const selected = microList.find((micro) => micro.id === selectedId) ?? null;
   // Get greatest amount of micronutrient from the selected nutrient's food sources
   const maxSource = selected
-    ? Math.max(...selected.sources.map((s) => s.amount))
+    ? Math.max(...selected.foodNutrients.map((s) => s.amount))
     : 1;
   const nutrientPercent = selected
     ? Math.round((selected.current / selected.goal) * 100)
@@ -162,11 +162,11 @@ export default function Nutrients({ microList }: { microList: Micro[] }) {
                   </div>
                 </div>
                 {/* If an upper limit exists*/}
-                {selected.max && (
+                {selected.limit && (
                   <div className={styles.pstat}>
                     <div className={styles.pstatLbl}>Upper Limits</div>
                     <div className={styles.pstatVal}>
-                      {formatMicro(selected.max)}{" "}
+                      {formatMicro(selected.limit)}{" "}
                       <span className={styles.pstatUnit}>{selected.unit}</span>
                     </div>
                   </div>
@@ -214,12 +214,14 @@ export default function Nutrients({ microList }: { microList: Micro[] }) {
                 Best food sources (per serving, highest first)
               </div>
               {/* Food sources */}
-              {[...selected.sources]
+              {[...selected.foodNutrients]
                 .sort((a, b) => b.amount - a.amount)
                 .map((source, i) => (
                   <div key={i} className={styles.sourceRow}>
                     <span className={styles.srcRank}>#{i + 1}</span>
-                    <span className={styles.srcName}>{source.food}</span>
+                    <span className={styles.srcName}>
+                      {source.food.name ?? "Food not found"}
+                    </span>
                     <div className={styles.srcBarWrap}>
                       <div className={styles.srcBarTrack}>
                         <div
@@ -231,7 +233,7 @@ export default function Nutrients({ microList }: { microList: Micro[] }) {
                       </div>
                     </div>
                     <span className={styles.srcVal}>
-                      {formatMicro(source.amount)} {source.unit}
+                      {formatMicro(source.amount)} {source.food.unit}
                     </span>
                   </div>
                 ))}
