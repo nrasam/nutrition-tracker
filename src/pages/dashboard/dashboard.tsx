@@ -1,10 +1,10 @@
 import styles from "./dashboard.module.css";
 import sharedStyles from "../shared.module.css";
 
-import type { Goals, Totals } from "../../types";
+import type { Goals, Micro, Totals } from "../../types";
 import { useNavigate } from "react-router-dom";
 
-import { WEIGHT_HISTORY, MICROS } from "../../data/mockData";
+import { WEIGHT_HISTORY } from "../../data/mockData";
 
 import Ring from "../../components/Ring";
 
@@ -75,7 +75,8 @@ export default function Dashboard({
     "omega3",
   ];
 
-  const dashMicros = MICROS.filter((m) => favMicros.includes(m.id));
+  //const dashMicros = MICROS.filter((m) => favMicros.includes(m.id));
+  const dashMicros: Micro[] = [];
 
   return (
     <div className={sharedStyles.pageInner}>

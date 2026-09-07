@@ -1,8 +1,8 @@
 import styles from "./foods.module.css";
 import sharedStyles from "../shared.module.css";
 
-import type { Food, LogEntry } from "../../types";
-import { INITIAL_FOODS } from "../../data/mockData";
+import type { Food, FoodEntry } from "../../types";
+import { FOOD_CATEGORIES } from "../../data/mockData";
 import { useState, useMemo } from "react";
 import { formatMicro } from "../pagesHelpers";
 import { AddFood } from "../../components/modals/AddFood";
@@ -17,7 +17,7 @@ export default function Foods({
 }: {
   foodsList: Food[];
   loading: Boolean;
-  onEat: (entry: LogEntry) => void;
+  onEat: (entry: FoodEntry) => void;
 }) {
   if (loading) {
     return <p>Loading foods...</p>;
@@ -27,7 +27,7 @@ export default function Foods({
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [stockFilter, setStockFilter] = useState(false);
   const [search, setSearch] = useState("");
-  const [catFilter, setCatFilter] = useState("All");
+  const [catFilter, setCatFilter] = useState("ALL");
   const [sortBy, setSortBy] = useState<SortKey>("name");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
   const [showAddFood, setShowAddFood] = useState(false);
@@ -38,7 +38,7 @@ export default function Foods({
       const matchSearch = food.name
         .toLocaleLowerCase()
         .includes(search.toLocaleLowerCase());
-      const matchCat = catFilter === "All" || food.category === catFilter;
+      const matchCat = catFilter === "ALL" || food.category === catFilter;
       const matchStocked = !stockFilter || food.stocked;
 
       return matchSearch && matchCat && matchStocked;
@@ -60,13 +60,6 @@ export default function Foods({
   }, [foods, search, catFilter, stockFilter, sortBy, sortDir]);
 
   const selected = foods.find((food) => food.id === selectedId) ?? null;
-
-  // Get a sorted list of food categories from the foods present in the list
-  const categories = useMemo(() => {
-    // Use Set to remove duplicates
-    const cats = Array.from(new Set(foods.map((food) => food.category))).sort();
-    return ["All", ...cats];
-  }, [foods]);
 
   function handleSort(key: SortKey) {
     // Reverse sort direction if the same sort is clicked again
@@ -99,11 +92,21 @@ export default function Foods({
               value={catFilter}
               onChange={(e) => setCatFilter(e.target.value)}
             >
-              {categories.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
-              ))}
+              {/* {FOOD_CATEGORIES.map((cat) => {
+                <option value={cat}>{cat}</option>;
+              })} */}
+              <option value="ALL">All</option>
+              <option value="DAIRY">Dairy</option>
+              <option value="EGGS">Eggs</option>
+              <option value="FISH_SEAFOOD">Fish & Seafood</option>
+              <option value="FRUITS">Fruits</option>
+              <option value="GRAINS">Grains</option>
+              <option value="LEGUMES">Legumes</option>
+              <option value="NUTS_SEEDS">Nuts & Seeds</option>
+              <option value="POULTRY">Poultry</option>
+              <option value="RED_MEAT">Red Meat</option>
+              <option value="VEGETABLES">Vegetables</option>
+              <option value="DRINKS">Drinks</option>
             </select>
             <button
               className={`${sharedStyles.toggleBtn} ${stockFilter ? sharedStyles.active : ""}`}
@@ -310,7 +313,7 @@ export default function Foods({
                     <div className={styles.nutrientList}>
                       {/* Per nutrient */}
                       {selected.nutrients.map((nut) => {
-                        const max = nut.micro.max ?? nut.amount * 2;
+                        const max = nut.micro.limit ?? nut.amount * 2;
                         const percent = Math.min(100, (nut.amount / max) * 100);
                         return (
                           <div

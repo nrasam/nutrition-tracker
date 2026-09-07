@@ -1,5 +1,6 @@
 import styles from "./nutrients.module.css";
 import sharedStyles from "../shared.module.css";
+import borrowedFoodStyles from "../foods/foods.module.css";
 
 import { statusColor, formatMicro } from "../pagesHelpers";
 import { useState } from "react";
@@ -238,6 +239,56 @@ export default function Nutrients({ microList }: { microList: Micro[] }) {
                     </span>
                   </div>
                 ))}
+              {/* Benefits */}
+              {selected.benefits.length > 0 && (
+                <>
+                  <div
+                    className={borrowedFoodStyles.foodSectionLbl}
+                    style={{ marginTop: "16px" }}
+                  >
+                    Benfits
+                  </div>
+                  {/* If nutrient has benefits; one per benefit */}
+                  {selected.benefits.map((ben, i) => (
+                    <div key={i} className={borrowedFoodStyles.benefitItem}>
+                      <span className={borrowedFoodStyles.benefitDot}>✦</span>
+                      <span>{ben}</span>
+                    </div>
+                  ))}
+                </>
+              )}
+              {/* Warnings */}
+              {selected.warnings.length > 0 && (
+                <>
+                  <div
+                    className={borrowedFoodStyles.foodSectionLbl}
+                    style={{ marginTop: "16px" }}
+                  >
+                    Warnings
+                  </div>
+                  {/* If nutrient has warnings; one per warning */}
+                  {selected.warnings.map((warn, i) => (
+                    <div key={i} className={borrowedFoodStyles.warnItem}>
+                      <span className={borrowedFoodStyles.warnDot}>⚠</span>
+                      <span>{warn}</span>
+                    </div>
+                  ))}
+                </>
+              )}
+              {/* If no nutrients or benefits */}
+              {selected.warnings.length === 0 &&
+                selected.benefits.length === 0 && (
+                  <div
+                    style={{
+                      color: "var(--text3)",
+                      fontSize: "12px",
+                      fontFamily: "var(--mono)",
+                      padding: "16px 0",
+                    }}
+                  >
+                    No detailed nutrition data for this nutrient.
+                  </div>
+                )}
             </div>
           </>
         ) : (
