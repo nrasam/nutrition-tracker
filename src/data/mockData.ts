@@ -811,21 +811,4 @@ const INITIAL_GOALS: Goals = {
   fiber: 35,
 };
 
-const FOOD_CATEGORIES: Record<string, string> = {
-  DAIRY: "Dairy",
-  EGGS: "Eggs",
-  FISH_SEAFOOD: "Fish & Seafood",
-  FRUITS: "Fruits",
-  GRAINS: "Grains",
-  LEGUMES: "Legumes",
-  DRINKS: "Drinks",
-};
-
-export {
-  GOALS,
-  CURRENT_WEIGHT,
-  GOAL_WEIGHT,
-  WEIGHT_HISTORY,
-  INITIAL_GOALS,
-  FOOD_CATEGORIES,
-};
+export { GOALS, CURRENT_WEIGHT, GOAL_WEIGHT, WEIGHT_HISTORY, INITIAL_GOALS };

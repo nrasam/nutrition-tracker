@@ -2,7 +2,6 @@ import styles from "./foods.module.css";
 import sharedStyles from "../shared.module.css";
 
 import type { Food, FoodEntry } from "../../types";
-import { FOOD_CATEGORIES } from "../../data/mockData";
 import { useState, useMemo } from "react";
 import { formatMicro } from "../pagesHelpers";
 import { AddFood } from "../../components/modals/AddFood";
@@ -61,6 +60,9 @@ export default function Foods({
 
   const selected = foods.find((food) => food.id === selectedId) ?? null;
 
+  // Dynamically get unique list of food categories
+  const categories = [...new Set(foods.map((food) => food.category))].sort();
+
   function handleSort(key: SortKey) {
     // Reverse sort direction if the same sort is clicked again
     if (sortBy === key) setSortDir((dir) => (dir === "asc" ? "desc" : "asc"));
@@ -70,6 +72,14 @@ export default function Foods({
       // Reset sorting direction to desc unless sorting by name
       setSortDir(key === "name" ? "asc" : "desc");
     }
+  }
+
+  // Turns NUTS_SEEDS to Nuts & Seeds
+  function formatCategory(cat: string) {
+    return cat
+      .split("_")
+      .map((word) => word.charAt(0) + word.slice(1).toLowerCase())
+      .join(" & ");
   }
 
   return (
@@ -92,21 +102,12 @@ export default function Foods({
               value={catFilter}
               onChange={(e) => setCatFilter(e.target.value)}
             >
-              {/* {FOOD_CATEGORIES.map((cat) => {
-                <option value={cat}>{cat}</option>;
-              })} */}
               <option value="ALL">All</option>
-              <option value="DAIRY">Dairy</option>
-              <option value="EGGS">Eggs</option>
-              <option value="FISH_SEAFOOD">Fish & Seafood</option>
-              <option value="FRUITS">Fruits</option>
-              <option value="GRAINS">Grains</option>
-              <option value="LEGUMES">Legumes</option>
-              <option value="NUTS_SEEDS">Nuts & Seeds</option>
-              <option value="POULTRY">Poultry</option>
-              <option value="RED_MEAT">Red Meat</option>
-              <option value="VEGETABLES">Vegetables</option>
-              <option value="DRINKS">Drinks</option>
+              {categories.map((cat) => (
+                <option key={cat} value={cat}>
+                  {formatCategory(cat)}
+                </option>
+              ))}
             </select>
             <button
               className={`${sharedStyles.toggleBtn} ${stockFilter ? sharedStyles.active : ""}`}
@@ -162,7 +163,7 @@ export default function Foods({
                     <div className={styles.foodRowName}>{food.name}</div>
                     <div className={styles.foodRowMeta}>
                       <span className={styles.foodCat}>
-                        {food.category} | {food.serving}
+                        {formatCategory(food.category)} | {food.serving}
                       </span>
                       <span
                         className={`${styles.stockBadge} ${food.stocked ? styles.yes : styles.no}`}
@@ -254,7 +255,7 @@ export default function Foods({
               <div className={styles.foodPanelHd}>
                 <div className={styles.foodPanelName}>{selected.name}</div>
                 <div className={styles.foodPanelServing}>
-                  per {selected.serving}
+                  per {selected.serving} {selected.unit}
                 </div>
                 <div className={styles.macroTiles}>
                   <div className={styles.macroTile}>
@@ -271,7 +272,7 @@ export default function Foods({
                       className={styles.macroTileVal}
                       style={{ color: "var(--green)" }}
                     >
-                      {selected.protein}
+                      {selected.protein}g
                     </div>
                     <div className={styles.macroTileLbl}>protein</div>
                   </div>
@@ -280,7 +281,7 @@ export default function Foods({
                       className={styles.macroTileVal}
                       style={{ color: "var(--blue)" }}
                     >
-                      {selected.carbs}
+                      {selected.carbs}g
                     </div>
                     <div className={styles.macroTileLbl}>carbs</div>
                   </div>
@@ -289,7 +290,7 @@ export default function Foods({
                       className={styles.macroTileVal}
                       style={{ color: "var(--orange)" }}
                     >
-                      {selected.fat}
+                      {selected.fat}g
                     </div>
                     <div className={styles.macroTileLbl}>fat</div>
                   </div>
@@ -298,7 +299,7 @@ export default function Foods({
                       className={styles.macroTileVal}
                       style={{ color: "var(--purple)" }}
                     >
-                      {selected.fiber}
+                      {selected.fiber}g
                     </div>
                     <div className={styles.macroTileLbl}>fiber</div>
                   </div>
@@ -312,29 +313,37 @@ export default function Foods({
                     <div className={styles.foodSectionLbl}>Micronutrients</div>
                     <div className={styles.nutrientList}>
                       {/* Per nutrient */}
-                      {selected.nutrients.map((nut) => {
-                        const max = nut.micro.limit ?? nut.amount * 2;
-                        const percent = Math.min(100, (nut.amount / max) * 100);
-                        return (
-                          <div
-                            key={nut.micro.name}
-                            className={styles.nutrientItem}
-                          >
-                            <span className={styles.nutrientLbl}>
-                              {nut.micro.name}
-                            </span>
-                            <div className={styles.nutrientTrack}>
-                              <div
-                                className={styles.nutrientFill}
-                                style={{ width: `${percent}%` }}
-                              />
+                      {selected.nutrients
+                        .sort(
+                          (a, b) =>
+                            b.amount / b.micro.goal - a.amount / a.micro.goal,
+                        )
+                        .map((nut) => {
+                          const max = nut.micro.goal ?? nut.amount * 2;
+                          const percent = Math.min(
+                            100,
+                            (nut.amount / max) * 100,
+                          );
+                          return (
+                            <div
+                              key={nut.micro.name}
+                              className={styles.nutrientItem}
+                            >
+                              <span className={styles.nutrientLbl}>
+                                {nut.micro.name}
+                              </span>
+                              <div className={styles.nutrientTrack}>
+                                <div
+                                  className={styles.nutrientFill}
+                                  style={{ width: `${percent}%` }}
+                                />
+                              </div>
+                              <span className={styles.nutrientVal}>
+                                {Number(percent).toFixed(1)}%
+                              </span>
                             </div>
-                            <span className={styles.nutrientVal}>
-                              {formatMicro(nut.amount)} {nut.micro.unit}
-                            </span>
-                          </div>
-                        );
-                      })}
+                          );
+                        })}
                     </div>
                   </>
                 )}
