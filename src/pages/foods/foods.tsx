@@ -1,9 +1,8 @@
 import styles from "./foods.module.css";
 import sharedStyles from "../shared.module.css";
 
-import type { Food, FoodEntry } from "../../types";
+import type { Food, FoodEntry, Micro } from "../../types";
 import { useState, useMemo } from "react";
-import { formatMicro } from "../pagesHelpers";
 import { AddFood } from "../../components/modals/AddFood";
 import EatFood from "../../components/modals/EatFood";
 
@@ -13,10 +12,12 @@ export default function Foods({
   foodsList,
   loading,
   onEat,
+  microList,
 }: {
   foodsList: Food[];
   loading: Boolean;
   onEat: (entry: FoodEntry) => void;
+  microList: Micro[];
 }) {
   if (loading) {
     return <p>Loading foods...</p>;
@@ -415,6 +416,7 @@ export default function Foods({
         <AddFood
           onClose={() => setShowAddFood(false)}
           onAdd={(food) => setFoods((prev) => [...prev, food])}
+          microsList={microList}
         />
       )}
       {/* Eat food modal */}

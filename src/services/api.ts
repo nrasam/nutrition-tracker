@@ -1,4 +1,4 @@
-import type { Food } from "../types";
+import type { Food, NewFood } from "../types";
 
 const API_BASE = import.meta.env.VITE_API_URL ?? "http://localhost:3001/api";
 
@@ -32,16 +32,13 @@ export async function getFoodEntries() {
   return res.json();
 }
 
-export async function createFood(food: Food) {
+export async function createFood(newFood: NewFood): Promise<Food> {
   const res = await fetch(`${API_BASE}/foods`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      name: food.name,
-      category: food.category,
-    }),
+    body: JSON.stringify(newFood),
   });
 
   if (!res.ok) {

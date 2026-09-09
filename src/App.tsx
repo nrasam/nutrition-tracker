@@ -43,7 +43,9 @@ export default function App() {
       });
 
     getMicros().then((micros) => {
-      setMicros(micros);
+      setMicros(
+        micros.sort((a: Micro, b: Micro) => a.name.localeCompare(b.name)),
+      );
     });
   }, []);
 
@@ -121,7 +123,12 @@ export default function App() {
         <Route
           path="foods"
           element={
-            <Foods foodsList={foods} loading={foodsLoading} onEat={handleEat} />
+            <Foods
+              foodsList={foods}
+              loading={foodsLoading}
+              onEat={handleEat}
+              microList={micros}
+            />
           }
         />
         <Route

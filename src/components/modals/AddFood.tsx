@@ -1,63 +1,35 @@
-import type { FoodNutrient, Food } from "../../types";
+import type { NewFood, Food, Micro, FoodCategory } from "../../types";
 import styles from "./modal.module.css";
 
 import { useState } from "react";
+import { createFood } from "../../services/api";
 
-const MICRO_FIELDS: FoodNutrient[] = [
-  { key: "vitaminD", label: "Vitamin D", unit: "IU", dailyMax: 800, value: 0 },
-  { key: "vitaminC", label: "Vitamin C", unit: "mg", dailyMax: 90, value: 0 },
-  {
-    key: "vitaminB12",
-    label: "Vitamin B12",
-    unit: "mcg",
-    dailyMax: 2.4,
-    value: 0,
-  },
-  { key: "folate", label: "Folate (B9)", unit: "mcg", dailyMax: 400, value: 0 },
-  { key: "iron", label: "Iron", unit: "mg", dailyMax: 18, value: 0 },
-  { key: "calcium", label: "Calcium", unit: "mg", dailyMax: 1000, value: 0 },
-  { key: "magnesium", label: "Magnesium", unit: "mg", dailyMax: 420, value: 0 },
-  { key: "zinc", label: "Zinc", unit: "mg", dailyMax: 11, value: 0 },
-  {
-    key: "potassium",
-    label: "Potassium",
-    unit: "mg",
-    dailyMax: 4700,
-    value: 0,
-  },
-  { key: "omega3", label: "Omega-3 ALA", unit: "g", dailyMax: 1.6, value: 0 },
-  { key: "vitaminA", label: "Vitamin A", unit: "IU", dailyMax: 5000, value: 0 },
-  { key: "vitaminE", label: "Vitamin E", unit: "mg", dailyMax: 15, value: 0 },
-  { key: "vitaminK", label: "Vitamin K", unit: "mcg", dailyMax: 120, value: 0 },
-  { key: "selenium", label: "Selenium", unit: "mcg", dailyMax: 55, value: 0 },
-];
-
-interface NewFood {
-  name: string;
-  category: string;
-  serving: string;
-  calories: string;
-  protein: string;
-  carbs: string;
-  fat: string;
-  fiber: string;
-  stocked: boolean;
-  micros: FoodNutrient[];
-  benefits: string[];
-  warnings: string[];
-}
+const CATEGORY_LABELS: Record<FoodCategory, string> = {
+  DAIRY: "Dairy",
+  EGGS: "Eggs",
+  FISH_SEAFOOD: "Fish & Seafood",
+  FRUITS: "Fruits",
+  GRAINS: "Grains",
+  LEGUMES: "Legumes",
+  NUTS_SEEDS: "Nuts & Seeds",
+  POULTRY: "Poultry",
+  RED_MEAT: "Red Meat",
+  VEGETABLES: "Vegetables",
+  DRINKS: "Drinks",
+};
 
 const EMPTY_FOOD: NewFood = {
   name: "",
-  category: "Vegetables",
-  serving: "",
-  calories: "",
-  protein: "",
-  carbs: "",
-  fat: "",
-  fiber: "",
+  category: "DAIRY",
+  serving: 1,
+  unit: "",
+  calories: 0,
+  protein: 0,
+  carbs: 0,
+  fat: 0,
+  fiber: 0,
   stocked: true,
-  micros: [...MICRO_FIELDS],
+  nutrients: [],
   benefits: [],
   warnings: [],
 };
@@ -65,22 +37,24 @@ const EMPTY_FOOD: NewFood = {
 export function AddFood({
   onClose,
   onAdd,
+  microsList,
 }: {
   onClose: () => void;
   onAdd: (food: Food) => void;
+  microsList: Micro[];
 }) {
+  const [micros] = useState<Micro[]>(microsList);
   const [form, setForm] = useState<NewFood>({
     ...EMPTY_FOOD,
-    // Gets a new set of micro_fields everytime instead of referencing the same one from EMPTY_FOOD
-    micros: [...MICRO_FIELDS],
   });
   const [microsOpen, setMicrosOpen] = useState(false);
   const [benefitsOpen, setBenefitsOpen] = useState(false);
   const [warningsOpen, setWarningsOpen] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [submitting, setSubmitting] = useState(false);
 
   // Update the form with the field 's new value
-  const set = (key: keyof NewFood, val: string | boolean) => {
+  const set = (key: keyof NewFood, val: string | number | boolean) => {
     setForm((prev) => ({ ...prev, [key]: val }));
 
     // Clear error for this field when user starts typing
@@ -88,20 +62,22 @@ export function AddFood({
       setErrors((prev) => ({ ...prev, [key]: "" }));
     }
   };
-  const setMicro = (key: string, val: string) =>
+
+  const setNutrient = (microId: number, val: string) =>
     setForm((prev) => {
-      const arr = [...prev.micros];
-      const i = arr.findIndex((m) => m.key === key);
-      if (i !== -1) {
-        arr[i] = { ...arr[i], value: parseFloat(val) || 0 };
-      }
-      return { ...prev, micros: arr };
+      const parsed = parseFloat(val) || 0;
+      const existing = prev.nutrients.filter((n) => n.microId !== microId);
+
+      // Only keep the entry if parsed is non-zero
+      return {
+        ...prev,
+        nutrients:
+          parsed !== 0 ? [...existing, { microId, value: parsed }] : existing,
+      };
     });
 
-  // Count the # of micros in the form that are not empty
-  const filledMicroCount = form.micros.filter(
-    (micro) => micro.value !== 0,
-  ).length;
+  // Count the # of nutrients in the form that are not empty
+  const filledMicroCount = form.nutrients.length;
   const filledBenefits = form.benefits.filter((b) => b.trim() !== "").length;
   const filledWarnings = form.warnings.filter((w) => w.trim() !== "").length;
 
@@ -122,7 +98,7 @@ export function AddFood({
       [field]: prev[field].filter((_, idx) => idx !== i),
     }));
 
-  function handleAdd() {
+  async function handleAdd() {
     const newErrors: Record<string, string> = {};
 
     // Validate required fields
@@ -136,25 +112,37 @@ export function AddFood({
       return;
     }
 
-    const nutrients: FoodNutrient[] = form.micros.filter((m) => m.value !== 0);
-    const food: Food = {
-      id: `${Date.now()}`,
+    setSubmitting(true);
+
+    const test = {
       name: form.name.trim(),
       category: form.category,
-      serving: form.serving || "1 serving",
+      serving: form.serving || 1,
+      unit: form.unit || "serving",
+      calories: form.calories || 0,
+      protein: form.protein || 0,
+      carbs: form.carbs || 0,
+      fat: form.fat || 0,
+      fiber: form.fiber || 0,
       stocked: form.stocked,
-      calories: parseFloat(form.calories) || 0,
-      protein: parseFloat(form.protein) || 0,
-      carbs: parseFloat(form.carbs) || 0,
-      fat: parseFloat(form.fat) || 0,
-      fiber: parseFloat(form.fiber) || 0,
-      nutrients,
       benefits: form.benefits.filter((b) => b.trim() !== ""),
       warnings: form.warnings.filter((w) => w.trim() !== ""),
+      nutrients: form.nutrients, // already { microId, value }, matches FoodNutrient's create shape
     };
 
-    onAdd(food);
-    onClose();
+    console.log(test);
+
+    try {
+      const newFood = await createFood(test);
+
+      onAdd(newFood);
+      onClose();
+    } catch (err) {
+      console.error(err);
+      setErrors({ submit: "Couldn't save this food. Try again." });
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -195,23 +183,14 @@ export function AddFood({
             <select
               className={styles.fieldInput}
               value={form.category}
-              onChange={(e) => set("category", e.target.value)}
+              onChange={(e) => set("category", e.target.value as FoodCategory)}
             >
-              {[
-                "Vegetables",
-                "Fruits",
-                "Grains",
-                "Legumes",
-                "Nuts & Seeds",
-                "Dairy & Eggs",
-                "Poultry",
-                "Fish & Seafood",
-                "Red Meat",
-                "Other",
-              ]
-                .sort()
-                .map((cat) => (
-                  <option key={cat}>{cat}</option>
+              {Object.entries(CATEGORY_LABELS)
+                .sort((a, b) => a[1].localeCompare(b[1]))
+                .map(([val, label]) => (
+                  <option key={val} value={val}>
+                    {label}
+                  </option>
                 ))}
             </select>
           </div>
@@ -219,10 +198,32 @@ export function AddFood({
             <label className={styles.fieldLbl}>Serving Size</label>
             <input
               className={styles.fieldInput}
-              placeholder="e.g. 1 cup (250 ml)"
+              type="number"
+              min="0"
+              placeholder="e.g. 1"
               value={form.serving}
-              onChange={(e) => set("serving", e.target.value)}
+              onChange={(e) => set("serving", parseFloat(e.target.value) || 0)}
             />
+          </div>
+          <div className={styles.field}>
+            <label className={styles.fieldLbl}>Serving Unit</label>
+            <input
+              className={styles.fieldInput}
+              placeholder="e.g. cup"
+              value={form.unit}
+              onChange={(e) => set("unit", e.target.value)}
+            />
+          </div>
+          <div className={styles.field}>
+            <label className={styles.stockToggle}>
+              <input
+                type="checkbox"
+                className={styles.stockCheck}
+                checked={form.stocked}
+                onChange={(e) => set("stocked", e.target.checked)}
+              />
+              Currently stocked
+            </label>
           </div>
         </div>
 
@@ -230,15 +231,15 @@ export function AddFood({
         <div className={styles.formSec}>Macros per serving</div>
         <div className={styles.formRow}>
           <div className={styles.field}>
-            <label className={styles.fieldLbl}>Calories (kcal)</label>
+            <label className={styles.fieldLbl}>Calories (cal)</label>
             <input
               className={styles.fieldInput}
               type="number"
               min="0"
               placeholder="0"
               value={form.calories}
-              onChange={(e) => set("calories", e.target.value)}
-              required={true}
+              onChange={(e) => set("calories", parseFloat(e.target.value) || 0)}
+              required
             />
           </div>
           <div className={styles.field}>
@@ -249,7 +250,7 @@ export function AddFood({
               min="0"
               placeholder="0"
               value={form.protein}
-              onChange={(e) => set("protein", e.target.value)}
+              onChange={(e) => set("protein", parseFloat(e.target.value) || 0)}
             />
           </div>
         </div>
@@ -262,7 +263,7 @@ export function AddFood({
               min="0"
               placeholder="0"
               value={form.carbs}
-              onChange={(e) => set("carbs", e.target.value)}
+              onChange={(e) => set("carbs", parseFloat(e.target.value) || 0)}
             />
           </div>
           <div className={styles.field}>
@@ -273,7 +274,7 @@ export function AddFood({
               min="0"
               placeholder="0"
               value={form.fat}
-              onChange={(e) => set("fat", e.target.value)}
+              onChange={(e) => set("fat", parseFloat(e.target.value) || 0)}
             />
           </div>
         </div>
@@ -286,19 +287,8 @@ export function AddFood({
               min="0"
               placeholder="0"
               value={form.fiber}
-              onChange={(e) => set("fiber", e.target.value)}
+              onChange={(e) => set("fiber", parseFloat(e.target.value) || 0)}
             />
-          </div>
-          <div className={styles.field} style={{ justifyContent: "flex-end" }}>
-            <label className={styles.stockToggle}>
-              <input
-                type="checkbox"
-                className={styles.stockCheck}
-                checked={form.stocked}
-                onChange={(e) => set("stocked", e.target.checked)}
-              />
-              Currently stocked
-            </label>
           </div>
         </div>
 
@@ -325,20 +315,22 @@ export function AddFood({
         {microsOpen && (
           <div className={styles.collapseBody}>
             <div className={styles.microGrid}>
-              {MICRO_FIELDS.map((micro) => {
-                const microData = form.micros.find((m) => m.key === micro.key);
+              {micros.map((micro) => {
+                const existing = form.nutrients.find(
+                  (n) => n.microId === micro.id,
+                );
                 return (
-                  <div key={micro.key} className={styles.field}>
+                  <div key={micro.id} className={styles.field}>
                     <label className={styles.fieldLbl}>
-                      {micro.label} ({micro.unit})
+                      {micro.name} ({micro.unit})
                     </label>
                     <input
                       className={`${styles.fieldInput} ${styles.fieldInputSm}`}
                       type="number"
                       min="0"
                       placeholder="—"
-                      value={microData?.value || ""}
-                      onChange={(e) => setMicro(micro.key, e.target.value)}
+                      value={existing?.value || ""}
+                      onChange={(e) => setNutrient(micro.id, e.target.value)}
                     />
                   </div>
                 );
@@ -447,12 +439,24 @@ export function AddFood({
           </div>
         )}
 
+        {errors.submit && (
+          <span className={styles.validationErrorMsg}>{errors.submit}</span>
+        )}
+
         <div className={styles.modalFtr}>
-          <button className={styles.btnGhost} onClick={onClose}>
+          <button
+            className={styles.btnGhost}
+            onClick={onClose}
+            disabled={submitting}
+          >
             Cancel
           </button>
-          <button className={styles.btnPrimary} onClick={handleAdd}>
-            Add Food
+          <button
+            className={styles.btnPrimary}
+            onClick={handleAdd}
+            disabled={submitting}
+          >
+            {submitting ? "Adding..." : "Add Food"}
           </button>
         </div>
       </div>

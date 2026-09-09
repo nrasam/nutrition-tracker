@@ -96,3 +96,24 @@ export interface Goals {
   fat: number;
   fiber: number;
 }
+
+export interface NutrientInput {
+  microId: number;
+  value: number;
+}
+
+export interface NewFood {
+  name: string;
+  category: FoodCategory;
+  serving: number;
+  unit: string;
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+  fiber: number;
+  stocked: boolean;
+  benefits: string[];
+  warnings: string[];
+  nutrients: NutrientInput[];
+}
