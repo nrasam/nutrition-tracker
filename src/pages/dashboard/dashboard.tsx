@@ -15,11 +15,13 @@ export default function Dashboard({
   microTotals,
   goals,
   currentWeight,
+  microList,
 }: {
   totals: Totals;
   microTotals: Record<string, number>;
   goals: Goals;
   currentWeight: number;
+  microList: Micro[];
 }) {
   const navigate = useNavigate();
 
@@ -67,16 +69,15 @@ export default function Dashboard({
   ];
 
   const favMicros = [
-    "vitaminD",
-    "vitaminC",
-    "iron",
-    "calcium",
-    "magnesium",
-    "omega3",
+    "Vitamin D",
+    "Vitamin C",
+    "Iron",
+    "Calcium",
+    "Magnesium",
+    "Omega-3",
   ];
 
-  //const dashMicros = MICROS.filter((m) => favMicros.includes(m.id));
-  const dashMicros: Micro[] = [];
+  const dashMicros = microList.filter((m) => favMicros.includes(m.name));
 
   return (
     <div className={sharedStyles.pageInner}>

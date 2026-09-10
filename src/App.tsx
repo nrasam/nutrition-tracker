@@ -121,6 +121,7 @@ export default function App() {
               microTotals={microTotals}
               goals={goals}
               currentWeight={currentWeight}
+              microList={microList}
             />
           }
         />

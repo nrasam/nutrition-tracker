@@ -4,7 +4,7 @@ import borrowedFoodStyles from "../foods/foods.module.css";
 
 import { statusColor, formatMicro } from "../pagesHelpers";
 import { useState } from "react";
-import type { Micro, MicroCategory } from "../../types";
+import type { Micro } from "../../types";
 
 export default function Nutrients({ microList }: { microList: Micro[] }) {
   const [selectedId, setSelectedId] = useState<number | null>(null);
