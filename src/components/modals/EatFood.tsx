@@ -1,6 +1,7 @@
 import { useState } from "react";
-import type { Food, LogEntry } from "../../types";
+import type { Food, FoodEntry } from "../../types";
 import styles from "./modal.module.css";
+import { createFoodEntry } from "../../services/api";
 
 export default function EatFood({
   food,
@@ -9,9 +10,10 @@ export default function EatFood({
 }: {
   food: Food;
   onClose: () => void;
-  onConfirm: (entry: LogEntry) => void;
+  onConfirm: (entry: FoodEntry) => void;
 }) {
   const [servings, setServings] = useState(1);
+  const [submitting, setSubmitting] = useState(false);
 
   const cal = Math.round(food.calories * servings);
   const prot = Math.round(food.protein * servings * 10) / 10;
@@ -19,24 +21,19 @@ export default function EatFood({
   const fat = Math.round(food.fat * servings * 10) / 10;
   const fib = Math.round(food.fiber * servings * 10) / 10;
 
-  function handleLog() {
-    const now = new Date();
-    const time = now.toTimeString().slice(0, 5);
-    const entry: LogEntry = {
-      id: `log-${Date.now()}`,
-      foodId: food.id,
-      name: food.name,
-      servings,
-      serving: food.serving,
-      time,
-      calories: food.calories,
-      protein: food.protein,
-      carbs: food.carbs,
-      fat: food.fat,
-      fiber: food.fiber,
-      nutrients: food.nutrients,
-    };
-    onConfirm(entry);
+  async function handleLog() {
+    setSubmitting(true);
+
+    try {
+      const loggedFood = await createFoodEntry(food.id, servings);
+      onConfirm(loggedFood);
+      onClose();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setSubmitting(false);
+    }
+
     onClose();
   }
 
@@ -53,7 +50,9 @@ export default function EatFood({
           </button>
         </div>
         <div className={styles.eatFoodName}>{food.name}</div>
-        <div className={styles.eatServingLbl}>per {food.serving}</div>
+        <div className={styles.eatServingLbl}>
+          per {food.serving} {food.unit}
+        </div>
         <div className={styles.eatServingsRow}>
           <label>Servings</label>
           <input
@@ -120,7 +119,7 @@ export default function EatFood({
             style={{ background: "var(--green)" }}
             onClick={handleLog}
           >
-            Log Food
+            {submitting ? "Logging..." : "Log Food"}
           </button>
         </div>
       </div>
