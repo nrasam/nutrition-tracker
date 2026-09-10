@@ -268,3 +268,53 @@
     color: #0c1220;
   }
 }
+
+.panelActions {
+  display: flex;
+  gap: 5px;
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+
+.panelEditBtn {
+  padding: 4px 10px;
+  /* background: none; */
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  color: var(--text2);
+  font-size: 11px;
+  font-family: var(--mono);
+  cursor: pointer;
+  transition: all 0.15s;
+
+  /* &:hover {
+    border-color: var(--blue);
+    color: var(--blue);
+  } */
+}
+
+.panelDeleteBtn {
+  padding: 4px 10px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  color: var(--text3);
+  font-size: 11px;
+  font-family: var(--mono);
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover {
+    border-color: var(--red);
+    color: var(--red);
+    background: var(--red-bg);
+  }
+}
+
+.foodPanelHdTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 2px;
+}

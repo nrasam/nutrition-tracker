@@ -5,6 +5,7 @@ import type { Food, FoodEntry, Micro } from "../../types";
 import { useState, useMemo } from "react";
 import { AddFood } from "../../components/modals/AddFood";
 import EatFood from "../../components/modals/EatFood";
+import { deleteFood } from "../../services/api";
 
 type SortKey = "name" | "calories" | "protein" | "carbs" | "fat" | "fiber";
 
@@ -81,6 +82,21 @@ export default function Foods({
       .split("_")
       .map((word) => word.charAt(0) + word.slice(1).toLowerCase())
       .join(" & ");
+  }
+
+  async function handleDeleteFood(id: number | null) {
+    if (!id) {
+      console.error("Failed to delete food: ID is null!");
+      return;
+    }
+
+    try {
+      await deleteFood(id);
+      setFoods((prev) => prev.filter((f) => f.id !== id));
+      setSelectedId(null);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (
@@ -254,7 +270,20 @@ export default function Foods({
             <>
               {/* Food panel */}
               <div className={styles.foodPanelHd}>
-                <div className={styles.foodPanelName}>{selected.name}</div>
+                <div className={styles.foodPanelHdTop}>
+                  <div className={styles.foodPanelName}>{selected.name}</div>
+                  <div className={styles.panelActions}>
+                    <button className={styles.panelEditBtn} disabled>
+                      Edit (WIP)
+                    </button>
+                    <button
+                      className={styles.panelDeleteBtn}
+                      onClick={() => handleDeleteFood(selectedId)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
                 <div className={styles.foodPanelServing}>
                   per {selected.serving} {selected.unit}
                 </div>

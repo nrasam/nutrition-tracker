@@ -75,8 +75,6 @@ export async function deleteFood(id: number) {
   if (!res.ok) {
     throw new Error("Failed to delete food");
   }
-
-  return res.json();
 }
 
 export async function deleteFoodEntry(id: number) {

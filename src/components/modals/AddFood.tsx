@@ -114,7 +114,7 @@ export function AddFood({
 
     setSubmitting(true);
 
-    const test = {
+    const foodToAdd = {
       name: form.name.trim(),
       category: form.category,
       serving: form.serving || 1,
@@ -127,13 +127,11 @@ export function AddFood({
       stocked: form.stocked,
       benefits: form.benefits.filter((b) => b.trim() !== ""),
       warnings: form.warnings.filter((w) => w.trim() !== ""),
-      nutrients: form.nutrients, // already { microId, value }, matches FoodNutrient's create shape
+      nutrients: form.nutrients,
     };
 
-    console.log(test);
-
     try {
-      const newFood = await createFood(test);
+      const newFood = await createFood(foodToAdd);
 
       onAdd(newFood);
       onClose();
