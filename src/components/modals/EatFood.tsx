@@ -118,6 +118,7 @@ export default function EatFood({
             className={styles.btnPrimary}
             style={{ background: "var(--green)" }}
             onClick={handleLog}
+            disabled={submitting}
           >
             {submitting ? "Logging..." : "Log Food"}
           </button>

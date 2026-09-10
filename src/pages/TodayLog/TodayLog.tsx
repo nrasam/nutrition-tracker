@@ -16,6 +16,16 @@ export default function TodayLog({
   totals: Totals;
 }) {
   const goals = GOALS;
+
+  function getFormattedDate(loggedAt: string) {
+    const date = new Date(loggedAt);
+    return date.toLocaleTimeString([], {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+  }
+
   return (
     <div className={sharedStyles.pageInner}>
       {/* Total Summary strip */}
@@ -114,14 +124,15 @@ export default function TodayLog({
             return (
               <div key={e.id} className={styles.logEntry}>
                 <span className={styles.logTime}>
-                  {e.loggedAt.toLocaleDateString()}
+                  {getFormattedDate(e.loggedAt)}
                 </span>
                 <div>
                   <div className={styles.logEntryName}>
                     {e.food?.name ?? "Food no longer exists"}
                   </div>
                   <div className={styles.logEntryServing}>
-                    ×{e.servings} · {e.food?.serving ?? "Unit"}
+                    ×{e.servings} · {e.food?.serving ?? 1}{" "}
+                    {e.food?.unit ?? "Unit"}
                   </div>
                 </div>
                 <div className={styles.logStat}>

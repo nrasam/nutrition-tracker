@@ -60,7 +60,7 @@ export interface FoodEntry {
   id: number;
   foodId?: number;
   servings: number;
-  loggedAt: Date;
+  loggedAt: string;
   calories: number;
   protein: number;
   carbs: number;

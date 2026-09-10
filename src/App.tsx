@@ -19,14 +19,15 @@ import { INITIAL_GOALS, CURRENT_WEIGHT } from "./data/mockData";
 import Settings from "./pages/settings/Settings";
 
 import { useLocalStorage } from "./hooks/useLocalStorage";
-import { getFoods, getMicros } from "./services/api";
+import { getFoodEntries, getFoods, getMicros } from "./services/api";
 
 export default function App() {
   const [foods, setFoods] = useState<Food[]>([]);
   const [foodsLoading, setfoodsLoading] = useState(true);
   const [micros, setMicros] = useState<Micro[]>([]);
 
-  const [log, setLog] = useLocalStorage<FoodEntry[]>("nutrition-log", []);
+  //const [log, setLog] = useLocalStorage<FoodEntry[]>("nutrition-log", []);
+  const [log, setLog] = useState<FoodEntry[]>([]);
   const [goals, setGoals] = useLocalStorage<Goals>("goals", INITIAL_GOALS);
   const [currentWeight, setCurrWeight] = useLocalStorage<number>(
     "current-weight",
@@ -46,6 +47,10 @@ export default function App() {
       setMicros(
         micros.sort((a: Micro, b: Micro) => a.name.localeCompare(b.name)),
       );
+    });
+
+    getFoodEntries().then((entries) => {
+      setLog(entries);
     });
   }, []);
 
