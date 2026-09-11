@@ -7,7 +7,14 @@ import { AddFood } from "../../components/modals/AddFood";
 import EatFood from "../../components/modals/EatFood";
 import { deleteFood } from "../../services/api";
 
-type SortKey = "name" | "calories" | "protein" | "carbs" | "fat" | "fiber";
+type SortKey =
+  | "name"
+  | "calories"
+  | "protein"
+  | "protein %"
+  | "carbs"
+  | "fat"
+  | "fiber";
 
 export default function Foods({
   foodsList,
@@ -45,6 +52,10 @@ export default function Foods({
         return sortDir === "asc"
           ? a.name.localeCompare(b.name)
           : b.name.localeCompare(a.name);
+      } else if (sortBy === "protein %") {
+        return sortDir === "asc"
+          ? a.protein / a.calories - b.protein / b.calories
+          : b.protein / b.calories - a.protein / a.calories;
       } else {
         return sortDir === "asc"
           ? a[sortBy] - b[sortBy]
@@ -141,6 +152,7 @@ export default function Foods({
                 "name",
                 "calories",
                 "protein",
+                "protein %",
                 "carbs",
                 "fat",
                 "fiber",
