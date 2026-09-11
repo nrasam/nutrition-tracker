@@ -2,7 +2,7 @@ import type { NewFood, Food, Micro, FoodCategory } from "../../types";
 import styles from "./modal.module.css";
 
 import { useState } from "react";
-import { createFood } from "../../services/api";
+import { createFood, updateFood } from "../../services/api";
 
 const CATEGORY_LABELS: Record<FoodCategory, string> = {
   DAIRY: "Dairy",
@@ -35,18 +35,43 @@ const EMPTY_FOOD: NewFood = {
 };
 
 export function AddFood({
+  mode,
+  initialFood,
   onClose,
   onAdd,
   microsList,
 }: {
+  mode: "create" | "edit";
+  initialFood?: Food;
   onClose: () => void;
   onAdd: (food: Food) => void;
   microsList: Micro[];
 }) {
   const [micros] = useState<Micro[]>(microsList);
-  const [form, setForm] = useState<NewFood>({
-    ...EMPTY_FOOD,
-  });
+  const [form, setForm] = useState<NewFood>(() =>
+    initialFood
+      ? {
+          name: initialFood.name,
+          category: initialFood.category,
+          serving: initialFood.serving,
+          unit: initialFood.unit,
+          calories: initialFood.calories,
+          protein: initialFood.protein,
+          carbs: initialFood.carbs,
+          fat: initialFood.fat,
+          fiber: initialFood.fiber,
+          stocked: initialFood.stocked,
+          nutrients: initialFood.nutrients.map((n) => ({
+            microId: n.microId,
+            amount: n.amount,
+          })),
+          benefits: [...initialFood.benefits],
+          warnings: [...initialFood.warnings],
+        }
+      : {
+          ...EMPTY_FOOD,
+        },
+  );
   const [microsOpen, setMicrosOpen] = useState(false);
   const [benefitsOpen, setBenefitsOpen] = useState(false);
   const [warningsOpen, setWarningsOpen] = useState(false);
@@ -72,7 +97,7 @@ export function AddFood({
       return {
         ...prev,
         nutrients:
-          parsed !== 0 ? [...existing, { microId, value: parsed }] : existing,
+          parsed !== 0 ? [...existing, { microId, amount: parsed }] : existing,
       };
     });
 
@@ -114,30 +139,35 @@ export function AddFood({
 
     setSubmitting(true);
 
-    const foodToAdd = {
-      name: form.name.trim(),
-      category: form.category,
-      serving: form.serving || 1,
-      unit: form.unit || "serving",
-      calories: form.calories || 0,
-      protein: form.protein || 0,
-      carbs: form.carbs || 0,
-      fat: form.fat || 0,
-      fiber: form.fiber || 0,
-      stocked: form.stocked,
-      benefits: form.benefits.filter((b) => b.trim() !== ""),
-      warnings: form.warnings.filter((w) => w.trim() !== ""),
-      nutrients: form.nutrients,
-    };
-
     try {
-      const newFood = await createFood(foodToAdd);
+      const payload = {
+        name: form.name.trim(),
+        category: form.category,
+        serving: form.serving || 1,
+        unit: form.unit || "serving",
+        calories: form.calories || 0,
+        protein: form.protein || 0,
+        carbs: form.carbs || 0,
+        fat: form.fat || 0,
+        fiber: form.fiber || 0,
+        stocked: form.stocked,
+        benefits: form.benefits.filter((b) => b.trim() !== ""),
+        warnings: form.warnings.filter((w) => w.trim() !== ""),
+        nutrients: form.nutrients,
+      };
 
-      onAdd(newFood);
+      const savedFood =
+        mode === "edit"
+          ? await updateFood(initialFood!.id, payload)
+          : await createFood(payload);
+
+      onAdd(savedFood);
       onClose();
     } catch (err) {
       console.error(err);
-      setErrors({ submit: "Couldn't save this food. Try again." });
+      setErrors({
+        submit: `Couldn't ${mode === "edit" ? "update" : "save"} this food. Try again.`,
+      });
     } finally {
       setSubmitting(false);
     }
@@ -151,7 +181,9 @@ export function AddFood({
     >
       <div className={styles.modal}>
         <div className={styles.modalHd}>
-          <span className={styles.modalTitle}>Add Food</span>
+          <span className={styles.modalTitle}>
+            {mode === "create" ? "Add " : "Edit "}Food
+          </span>
           <button className={styles.modalClose} onClick={onClose}>
             ×
           </button>
@@ -327,7 +359,7 @@ export function AddFood({
                       type="number"
                       min="0"
                       placeholder="—"
-                      value={existing?.value || ""}
+                      value={existing?.amount || ""}
                       onChange={(e) => setNutrient(micro.id, e.target.value)}
                     />
                   </div>
@@ -454,7 +486,13 @@ export function AddFood({
             onClick={handleAdd}
             disabled={submitting}
           >
-            {submitting ? "Adding..." : "Add Food"}
+            {mode === "create"
+              ? submitting
+                ? "Adding..."
+                : "Add Food"
+              : submitting
+                ? "Saving..."
+                : "Save Changes"}
           </button>
         </div>
       </div>

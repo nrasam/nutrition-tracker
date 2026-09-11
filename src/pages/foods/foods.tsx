@@ -26,6 +26,7 @@ export default function Foods({
   const [sortBy, setSortBy] = useState<SortKey>("name");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
   const [showAddFood, setShowAddFood] = useState(false);
+  const [showEditFood, setShowEditFood] = useState(false);
   const [foodToEat, setFoodToEat] = useState<Food | null>(null);
 
   const sorted = useMemo(() => {
@@ -267,8 +268,11 @@ export default function Foods({
                 <div className={styles.foodPanelHdTop}>
                   <div className={styles.foodPanelName}>{selected.name}</div>
                   <div className={styles.panelActions}>
-                    <button className={styles.panelEditBtn} disabled>
-                      Edit (WIP)
+                    <button
+                      className={styles.panelEditBtn}
+                      onClick={() => setShowEditFood(true)}
+                    >
+                      Edit
                     </button>
                     <button
                       className={styles.panelDeleteBtn}
@@ -437,8 +441,23 @@ export default function Foods({
       {/* Add food modal */}
       {showAddFood && (
         <AddFood
+          mode={"create"}
           onClose={() => setShowAddFood(false)}
           onAdd={(food) => setFoods((prev) => [...prev, food])}
+          microsList={microList}
+        />
+      )}
+      {/* Edit Food */}
+      {showEditFood && selected && (
+        <AddFood
+          mode={"edit"}
+          initialFood={selected}
+          onClose={() => setShowEditFood(false)}
+          onAdd={(updatedFood) =>
+            setFoods((foods) =>
+              foods.map((f) => (f.id === updatedFood.id ? updatedFood : f)),
+            )
+          }
           microsList={microList}
         />
       )}

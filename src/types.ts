@@ -110,7 +110,7 @@ export interface GoalsInput {
 
 export interface NutrientInput {
   microId: number;
-  value: number;
+  amount: number;
 }
 
 export interface NewFood {

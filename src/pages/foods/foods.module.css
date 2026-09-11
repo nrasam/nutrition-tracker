@@ -277,8 +277,8 @@
 }
 
 .panelEditBtn {
-  padding: 0px 4px;
-  /* background: none; */
+  padding: 4px 10px;
+  background: none;
   border: 1px solid var(--border);
   border-radius: var(--r-sm);
   color: var(--text2);
@@ -287,10 +287,10 @@
   cursor: pointer;
   transition: all 0.15s;
 
-  /* &:hover {
+  &:hover {
     border-color: var(--blue);
     color: var(--blue);
-  } */
+  }
 }
 
 .panelDeleteBtn {
