@@ -20,16 +20,10 @@ import Settings from "./pages/settings/Settings";
 import sharedStyles from "./pages/shared.module.css";
 
 import { useLocalStorage } from "./hooks/useLocalStorage";
-import {
-  getFoodEntries,
-  getFoods,
-  getGoals,
-  getMicros,
-} from "./services/api";
+import { getFoodEntries, getFoods, getGoals, getMicros } from "./services/api";
 
 export default function App() {
-  const [foods, setFoods] = useState<Food[]>([]);
-  const [foodsLoading, setfoodsLoading] = useState(true);
+  const [foods, setFoods] = useState<Food[]>();
   const [micros, setMicros] = useState<Micro[]>([]);
   const [log, setLog] = useState<FoodEntry[]>([]);
   const [goals, setGoals] = useState<Goals>();
@@ -40,13 +34,9 @@ export default function App() {
   );
 
   useEffect(() => {
-    getFoods()
-      .then((foods) => {
-        setFoods(foods);
-      })
-      .finally(() => {
-        setfoodsLoading(false);
-      });
+    getFoods().then((foods) => {
+      setFoods(foods);
+    });
 
     getMicros().then((micros) => {
       setMicros(
@@ -138,16 +128,28 @@ export default function App() {
             )
           }
         />
-        <Route path="nutrients" element={<Nutrients microList={microList} />} />
+        <Route
+          path="nutrients"
+          element={
+            microList.length > 0 ? (
+              <Nutrients microList={microList} />
+            ) : (
+              <div className={sharedStyles.pageLoading} role="status">
+                Loading Nutrients...
+              </div>
+            )
+          }
+        />
         <Route
           path="foods"
           element={
-            <Foods
-              foodsList={foods}
-              loading={foodsLoading}
-              onEat={handleEat}
-              microList={micros}
-            />
+            foods ? (
+              <Foods foodsList={foods} onEat={handleEat} microList={micros} />
+            ) : (
+              <div className={sharedStyles.pageLoading} role="status">
+                Loading Foods...
+              </div>
+            )
           }
         />
         <Route

@@ -11,19 +11,13 @@ type SortKey = "name" | "calories" | "protein" | "carbs" | "fat" | "fiber";
 
 export default function Foods({
   foodsList,
-  loading,
   onEat,
   microList,
 }: {
   foodsList: Food[];
-  loading: Boolean;
   onEat: (entry: FoodEntry) => void;
   microList: Micro[];
 }) {
-  if (loading) {
-    return <p>Loading foods...</p>;
-  }
-
   const [foods, setFoods] = useState<Food[]>(foodsList);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [stockFilter, setStockFilter] = useState(false);
@@ -246,7 +240,7 @@ export default function Foods({
                 </div>
               ))}
               {/* If no foods match */}
-              {sorted.length === 0 && !loading && (
+              {sorted.length === 0 && (
                 <div
                   style={{
                     textAlign: "center",
