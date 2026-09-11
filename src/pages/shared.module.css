@@ -35,6 +35,36 @@
   padding: 24px 28px;
 }
 
+/* Page loading */
+.pageLoading {
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 12px;
+  color: var(--text3);
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+
+.pageLoading::before {
+  content: ""; /* makes the pseudo-element appear */
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--border);
+  border-top-color: var(--yellow);
+  border-radius: 50%;
+  animation: pageLoadingSpin 0.8s linear infinite;
+}
+
+@keyframes pageLoadingSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 /* Search & Filtering */
 .toolbar {
   display: flex;

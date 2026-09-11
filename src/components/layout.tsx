@@ -16,7 +16,7 @@ export default function Layout({
 }: {
   logCount: number;
   currWeight: number;
-  goalWeight: number;
+  goalWeight: number | undefined;
 }) {
   const location = useLocation();
   // Finds the corresponding page title
@@ -87,7 +87,9 @@ export default function Layout({
               <span className="weight-badge-val">{currWeight}</span>
               <span className="weight-badge-unit">lbs</span>
             </div>
-            <div className="weight-badge-goal">Goal: {goalWeight} lbs</div>
+            <div className="weight-badge-goal">
+              Goal: {goalWeight ?? "N/A"} lbs
+            </div>
           </div>
         </div>
       </aside>

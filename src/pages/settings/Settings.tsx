@@ -2,8 +2,9 @@ import styles from "./Settings.module.css";
 import sharedStyles from "../shared.module.css";
 import modalStyles from "../../components/modals/modal.module.css";
 
-import type { Goals } from "../../types";
+import type { Goals, GoalsInput } from "../../types";
 import { useState } from "react";
+import { updateGoals } from "../../services/api";
 
 export default function Settings({
   goals,
@@ -11,15 +12,28 @@ export default function Settings({
   currWeightInitial,
 }: {
   goals: Goals;
-  onSave: (w: number, g: Goals) => void;
+  onSave: (newWeight: number, updatedGoals: Goals) => void;
   currWeightInitial: number;
 }) {
-  const [form, setForm] = useState<Goals>(goals);
+  const [form, setForm] = useState<GoalsInput>(goals);
   const [currWeight, setCurrWeight] = useState<number>(currWeightInitial);
+  const [submitting, setSubmitting] = useState<boolean>(false);
 
   function handleDiscard() {
     setForm(goals);
     setCurrWeight(currWeightInitial);
+  }
+
+  async function handleSave(newWeight: number, input: GoalsInput) {
+    try {
+      setSubmitting(true);
+      const updatedGoals = await updateGoals(input);
+      onSave(newWeight, updatedGoals);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -30,7 +44,6 @@ export default function Settings({
           type="number"
           max={999}
           min={0}
-          defaultValue={currWeightInitial}
           value={currWeight}
           required={true}
           onChange={(e) => setCurrWeight(parseFloat(e.target.value))}
@@ -41,11 +54,10 @@ export default function Settings({
           type="number"
           max={999}
           min={0}
-          defaultValue={goals.weight}
-          value={form.weight}
+          value={form.weightGoal}
           required={true}
           onChange={(e) =>
-            setForm((prev) => ({ ...prev, weight: Number(e.target.value) }))
+            setForm((prev) => ({ ...prev, weightGoal: Number(e.target.value) }))
           }
         />
         <span>(lbs)</span>
@@ -54,11 +66,13 @@ export default function Settings({
           type="number"
           max={9999}
           min={0}
-          defaultValue={goals.cal}
           step={10}
-          value={form.cal}
+          value={form.calorieGoal}
           onChange={(e) =>
-            setForm((prev) => ({ ...prev, cal: Number(e.target.value) }))
+            setForm((prev) => ({
+              ...prev,
+              calorieGoal: Number(e.target.value),
+            }))
           }
         />
         <span>(cal)</span>
@@ -67,10 +81,12 @@ export default function Settings({
           type="number"
           max={999}
           min={0}
-          defaultValue={goals.protein}
-          value={form.protein}
+          value={form.proteinGoal}
           onChange={(e) =>
-            setForm((prev) => ({ ...prev, protein: Number(e.target.value) }))
+            setForm((prev) => ({
+              ...prev,
+              proteinGoal: Number(e.target.value),
+            }))
           }
         />
         <span>(g)</span>
@@ -79,10 +95,9 @@ export default function Settings({
           type="number"
           max={999}
           min={0}
-          defaultValue={goals.carb}
-          value={form.carb}
+          value={form.carbGoal}
           onChange={(e) =>
-            setForm((prev) => ({ ...prev, carb: Number(e.target.value) }))
+            setForm((prev) => ({ ...prev, carbGoal: Number(e.target.value) }))
           }
         />
         <span>(g)</span>
@@ -91,10 +106,9 @@ export default function Settings({
           type="number"
           max={999}
           min={0}
-          defaultValue={goals.fat}
-          value={form.fat}
+          value={form.fatGoal}
           onChange={(e) =>
-            setForm((prev) => ({ ...prev, fat: Number(e.target.value) }))
+            setForm((prev) => ({ ...prev, fatGoal: Number(e.target.value) }))
           }
         />
         <span>(g)</span>
@@ -103,10 +117,9 @@ export default function Settings({
           type="number"
           max={999}
           min={0}
-          defaultValue={goals.fiber}
-          value={form.fiber}
+          value={form.fiberGoal}
           onChange={(e) =>
-            setForm((prev) => ({ ...prev, fiber: Number(e.target.value) }))
+            setForm((prev) => ({ ...prev, fiberGoal: Number(e.target.value) }))
           }
         />
         <span>(g)</span>
@@ -115,9 +128,10 @@ export default function Settings({
         </button>
         <button
           className={modalStyles.btnPrimary}
-          onClick={() => onSave(currWeight, form)}
+          onClick={() => handleSave(currWeight, form)}
+          disabled={submitting}
         >
-          Save Changes
+          {submitting ? "Saving..." : "Save Changes"}
         </button>
       </div>
     </div>

@@ -802,13 +802,4 @@ const WEIGHT_HISTORY = [185.0, 175.2, 170.8, 165.0, 160.5, 155.1, 146.6];
 //   },
 // ];
 
-const INITIAL_GOALS: Goals = {
-  weight: 140,
-  cal: 2150,
-  protein: 145,
-  carb: 250,
-  fat: 70,
-  fiber: 35,
-};
-
-export { GOALS, CURRENT_WEIGHT, GOAL_WEIGHT, WEIGHT_HISTORY, INITIAL_GOALS };
+export { GOALS, CURRENT_WEIGHT, GOAL_WEIGHT, WEIGHT_HISTORY };

@@ -89,12 +89,23 @@ export interface Totals {
 }
 
 export interface Goals {
-  weight: number;
-  cal: number;
-  protein: number;
-  carb: number;
-  fat: number;
-  fiber: number;
+  id: number;
+  singleton: boolean;
+  weightGoal: number;
+  calorieGoal: number;
+  proteinGoal: number;
+  carbGoal: number;
+  fatGoal: number;
+  fiberGoal: number;
+}
+
+export interface GoalsInput {
+  weightGoal: number;
+  calorieGoal: number;
+  proteinGoal: number;
+  carbGoal: number;
+  fatGoal: number;
+  fiberGoal: number;
 }
 
 export interface NutrientInput {

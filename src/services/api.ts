@@ -1,4 +1,11 @@
-import type { Food, FoodEntry, Micro, NewFood } from "../types";
+import type {
+  Food,
+  FoodEntry,
+  Goals,
+  Micro,
+  NewFood,
+  GoalsInput,
+} from "../types";
 
 const API_BASE = import.meta.env.VITE_API_URL ?? "http://localhost:3001/api";
 
@@ -28,6 +35,16 @@ export async function getFoodEntries(): Promise<FoodEntry[]> {
 
   if (!res.ok) {
     throw new Error("Failed to fetch food entries");
+  }
+
+  return res.json();
+}
+
+export async function getGoals(): Promise<Goals> {
+  const res = await fetch(`${API_BASE}/goals`);
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch goals");
   }
 
   return res.json();
@@ -100,6 +117,7 @@ export async function clearTodaysEntries(): Promise<void> {
   });
 }
 
+// Gets the start and end of the day
 function getTodaysRange() {
   const start = new Date();
   start.setHours(0, 0, 0, 0);
@@ -108,4 +126,13 @@ function getTodaysRange() {
   end.setDate(end.getDate() + 1);
 
   return { start: start.toISOString(), end: end.toISOString() };
+}
+
+export async function updateGoals(goals: GoalsInput): Promise<Goals> {
+  const res = await fetch(`${API_BASE}/goals`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(goals),
+  });
+  return res.json();
 }

@@ -25,13 +25,15 @@ export default function Dashboard({
 }) {
   const navigate = useNavigate();
 
-  const remaining = goals.cal - totals.calories;
+  const remaining = goals.calorieGoal - totals.calories;
   const calDeficit = 2350 - totals.calories;
 
-  const calorieProgress = Math.round((totals.calories / goals.cal) * 100);
+  const calorieProgress = Math.round(
+    (totals.calories / goals.calorieGoal) * 100,
+  );
 
   const weightGainOrLossRate = ((calDeficit * 7) / 3500).toFixed(2);
-  const weightGoalDiff = currentWeight - goals.weight;
+  const weightGoalDiff = currentWeight - goals.weightGoal;
 
   const weightMin = Math.min(...WEIGHT_HISTORY);
   const weightMax = Math.max(...WEIGHT_HISTORY);
@@ -41,28 +43,28 @@ export default function Dashboard({
     {
       name: "Protein",
       cur: totals.protein,
-      goal: goals.protein,
+      goal: goals.proteinGoal,
       unit: "g",
       color: "var(--green)",
     },
     {
       name: "Carbs",
       cur: totals.carbs,
-      goal: goals.carb,
+      goal: goals.carbGoal,
       unit: "g",
       color: "var(--blue)",
     },
     {
       name: "Fat",
       cur: totals.fat,
-      goal: goals.fat,
+      goal: goals.fatGoal,
       unit: "g",
       color: "var(--orange)",
     },
     {
       name: "Fiber",
       cur: totals.fiber,
-      goal: goals.fiber,
+      goal: goals.fiberGoal,
       unit: "g",
       color: "var(--purple)",
     },
@@ -87,7 +89,7 @@ export default function Dashboard({
           <div className={styles.ringWrap}>
             <Ring
               value={totals.calories}
-              max={goals.cal}
+              max={goals.calorieGoal}
               color="var(--yellow)"
             />
             <div className={styles.ringCenter}>
@@ -103,7 +105,7 @@ export default function Dashboard({
             <div className={styles.calRow}>
               <span className={styles.calRowLbl}>Goal</span>
               <span className={styles.calRowVal}>
-                {goals.cal.toLocaleString()}
+                {goals.calorieGoal.toLocaleString()}
               </span>
             </div>
             <div className={styles.calRow}>
@@ -176,7 +178,7 @@ export default function Dashboard({
                 <span className={styles.wtVal}>{currentWeight}</span>
                 <span className={styles.wtUnit}>lbs</span>
               </div>
-              <div className={styles.wtGoal}>Goal: {goals.weight} lbs</div>
+              <div className={styles.wtGoal}>Goal: {goals.weightGoal} lbs</div>
               <div className={styles.wtDelta}>
                 ▼ {(WEIGHT_HISTORY[0] - currentWeight).toFixed(1)} lbs lost
               </div>

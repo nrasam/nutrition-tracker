@@ -15,20 +15,25 @@ import {
   type Goals,
   type Micro,
 } from "./types";
-import { INITIAL_GOALS, CURRENT_WEIGHT } from "./data/mockData";
+import { CURRENT_WEIGHT } from "./data/mockData";
 import Settings from "./pages/settings/Settings";
+import sharedStyles from "./pages/shared.module.css";
 
 import { useLocalStorage } from "./hooks/useLocalStorage";
-import { getFoodEntries, getFoods, getMicros } from "./services/api";
+import {
+  getFoodEntries,
+  getFoods,
+  getGoals,
+  getMicros,
+} from "./services/api";
 
 export default function App() {
   const [foods, setFoods] = useState<Food[]>([]);
   const [foodsLoading, setfoodsLoading] = useState(true);
   const [micros, setMicros] = useState<Micro[]>([]);
-
-  //const [log, setLog] = useLocalStorage<FoodEntry[]>("nutrition-log", []);
   const [log, setLog] = useState<FoodEntry[]>([]);
-  const [goals, setGoals] = useLocalStorage<Goals>("goals", INITIAL_GOALS);
+  const [goals, setGoals] = useState<Goals>();
+
   const [currentWeight, setCurrWeight] = useLocalStorage<number>(
     "current-weight",
     CURRENT_WEIGHT,
@@ -52,6 +57,8 @@ export default function App() {
     getFoodEntries().then((entries) => {
       setLog(entries);
     });
+
+    getGoals().then((goals) => setGoals(goals));
   }, []);
 
   const macroTotals = useMemo<Totals>(
@@ -96,9 +103,9 @@ export default function App() {
     setLog((prev) => [...prev, entry]);
   }
 
-  function handleSave(w: number, g: Goals) {
-    setGoals(g);
-    setCurrWeight(w);
+  function handleSettingsSave(newWeight: number, updatedGoals: Goals) {
+    setCurrWeight(newWeight);
+    setGoals(updatedGoals);
   }
 
   return (
@@ -109,20 +116,26 @@ export default function App() {
           <Layout
             logCount={log.length}
             currWeight={currentWeight}
-            goalWeight={goals.weight}
+            goalWeight={goals?.weightGoal}
           />
         }
       >
         <Route
           index
           element={
-            <Dashboard
-              totals={macroTotals}
-              microTotals={microTotals}
-              goals={goals}
-              currentWeight={currentWeight}
-              microList={microList}
-            />
+            goals ? (
+              <Dashboard
+                totals={macroTotals}
+                microTotals={microTotals}
+                goals={goals}
+                currentWeight={currentWeight}
+                microList={microList}
+              />
+            ) : (
+              <div className={sharedStyles.pageLoading} role="status">
+                Loading...
+              </div>
+            )
           }
         />
         <Route path="nutrients" element={<Nutrients microList={microList} />} />
@@ -151,11 +164,17 @@ export default function App() {
         <Route
           path="settings"
           element={
-            <Settings
-              goals={goals}
-              onSave={handleSave}
-              currWeightInitial={currentWeight}
-            />
+            goals ? (
+              <Settings
+                goals={goals}
+                onSave={handleSettingsSave}
+                currWeightInitial={currentWeight}
+              />
+            ) : (
+              <div className={sharedStyles.pageLoading} role="status">
+                Loading...
+              </div>
+            )
           }
         />
       </Route>
