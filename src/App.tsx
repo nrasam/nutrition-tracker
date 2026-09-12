@@ -123,7 +123,7 @@ export default function App() {
               />
             ) : (
               <div className={sharedStyles.pageLoading} role="status">
-                Loading...
+                Loading... (this may take up to 30s)
               </div>
             )
           }
