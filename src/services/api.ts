@@ -9,6 +9,11 @@ import type {
 
 const API_BASE = import.meta.env.VITE_API_URL ?? "http://localhost:3001/api";
 
+function authHeaders(): HeadersInit {
+  const password = localStorage.getItem("adminPassword");
+  return password ? { "x-admin-password": password } : {};
+}
+
 export async function getFoods(): Promise<Food[]> {
   const res = await fetch(`${API_BASE}/foods`);
 
@@ -55,6 +60,7 @@ export async function createFood(newFood: NewFood): Promise<Food> {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      ...authHeaders(),
     },
     body: JSON.stringify(newFood),
   });
@@ -74,6 +80,7 @@ export async function createFoodEntry(
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      ...authHeaders(),
     },
     body: JSON.stringify({
       foodId,
@@ -91,6 +98,9 @@ export async function createFoodEntry(
 export async function deleteFood(id: number): Promise<void> {
   const res = await fetch(`${API_BASE}/foods/${id}`, {
     method: "DELETE",
+    headers: {
+      ...authHeaders(),
+    },
   });
 
   if (!res.ok) {
@@ -101,6 +111,9 @@ export async function deleteFood(id: number): Promise<void> {
 export async function deleteFoodEntry(id: number): Promise<void> {
   const res = await fetch(`${API_BASE}/entries/${id}`, {
     method: "DELETE",
+    headers: {
+      ...authHeaders(),
+    },
   });
 
   if (!res.ok) {
@@ -114,6 +127,9 @@ export async function clearTodaysEntries(): Promise<void> {
   const { start, end } = getTodaysRange();
   await fetch(`${API_BASE}/entries?start=${start}&end=${end}`, {
     method: "DELETE",
+    headers: {
+      ...authHeaders(),
+    },
   });
 }
 
@@ -131,7 +147,10 @@ function getTodaysRange() {
 export async function updateGoals(goals: GoalsInput): Promise<Goals> {
   const res = await fetch(`${API_BASE}/goals`, {
     method: "PATCH",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      ...authHeaders(),
+    },
     body: JSON.stringify(goals),
   });
   return res.json();
@@ -140,7 +159,10 @@ export async function updateGoals(goals: GoalsInput): Promise<Goals> {
 export async function updateFood(id: number, food: NewFood): Promise<Food> {
   const res = await fetch(`${API_BASE}/foods/${id}`, {
     method: "PATCH",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      ...authHeaders(),
+    },
     body: JSON.stringify(food),
   });
   return res.json();
