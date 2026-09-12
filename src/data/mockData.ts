@@ -1,5 +1,3 @@
-import type { Goals } from "../types";
-
 const GOALS = { calories: 2150, protein: 145, carbs: 250, fat: 70, fiber: 35 };
 
 const CURRENT_WEIGHT = 146.6;
