@@ -1,32 +1,40 @@
-# React + TypeScript + Vite
+# Nutrition Tracker
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Nutrition Tracker is a web app for logging meals and keeping an eye on daily nutrition. It brings calorie, macronutrient, and micronutrient tracking into one place, with a dashboard that makes progress toward personal goals easy to track.
 
-Currently, two official plugins are available:
+**[Open the hosted app](https://noelsnutritiontracker.netlify.app)**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## What it does
 
-## React Compiler
+- Shows daily calorie, protein, carbohydrate, fat, and fiber totals against configurable goals
+- Tracks vitamins, minerals, and other micronutrients alongside macronutrients
+- Lets users browse foods and add servings to today's log
+- Provides a daily log with the option to remove individual entries or clear the day
+- Stores the current weight locally so it persists between sessions
+- Includes settings for updating weight and nutrition goals
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Built with
 
-## Expanding the Oxlint configuration
+- React and TypeScript
+- Vite
+- React Router
+- CSS Modules and plain CSS
+- Local storage for client-side preferences
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+## Running locally
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm install
+npm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+The development server will print the local URL in the terminal.
+
+## Available scripts
+
+```bash
+npm run dev      # Start the development server
+npm run build    # Type-check and create a production build
+npm run lint     # Run Oxlint
+npm run preview  # Preview the production build locally
+```
