@@ -187,7 +187,8 @@ export default function Foods({
                     <div className={styles.foodRowName}>{food.name}</div>
                     <div className={styles.foodRowMeta}>
                       <span className={styles.foodCat}>
-                        {formatCategory(food.category)} | {food.serving}
+                        {formatCategory(food.category)} | {food.serving}{" "}
+                        {food.unit}
                       </span>
                       <span
                         className={`${styles.stockBadge} ${food.stocked ? styles.yes : styles.no}`}
