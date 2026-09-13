@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { Food, FoodEntry } from "../../types";
 import styles from "./modal.module.css";
-import { createFoodEntry } from "../../services/api";
+import { createFoodEntry, ApiError } from "../../services/api";
 
 export default function EatFood({
   food,
@@ -14,6 +14,7 @@ export default function EatFood({
 }) {
   const [servings, setServings] = useState(1);
   const [submitting, setSubmitting] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const cal = Math.round(food.calories * servings);
   const prot = Math.round(food.protein * servings * 10) / 10;
@@ -29,12 +30,15 @@ export default function EatFood({
       onConfirm(loggedFood);
       onClose();
     } catch (error) {
-      console.error(error);
+      setErrors({
+        submit:
+          error instanceof ApiError
+            ? error.message
+            : "Failed to log food entry.",
+      });
     } finally {
       setSubmitting(false);
     }
-
-    onClose();
   }
 
   return (
@@ -110,6 +114,9 @@ export default function EatFood({
             <div className={styles.eatPrevLbl}>fiber</div>
           </div>
         </div>
+        {errors.submit && (
+          <span className={styles.validationErrorMsg}>{errors.submit}</span>
+        )}
         <div className={styles.modalFtr}>
           <button className={styles.btnGhost} onClick={onClose}>
             Cancel

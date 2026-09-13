@@ -9,6 +9,14 @@ import type {
 
 const API_BASE = import.meta.env.VITE_API_BASE;
 
+export class ApiError extends Error {
+  status: number;
+  constructor(message: string, status: number) {
+    super(message);
+    this.status = status;
+  }
+}
+
 function authHeaders(): HeadersInit {
   const password = localStorage.getItem("adminPassword");
   return password ? { "x-admin-password": password } : {};
@@ -65,8 +73,12 @@ export async function createFood(newFood: NewFood): Promise<Food> {
     body: JSON.stringify(newFood),
   });
 
+  const body = await res.json().catch(() => null);
+
   if (!res.ok) {
-    throw new Error("Failed to create food");
+    const message =
+      typeof body?.error === "string" ? body.error : "Failed to create food.";
+    throw new ApiError(message, res.status);
   }
 
   return res.json();
@@ -88,11 +100,18 @@ export async function createFoodEntry(
     }),
   });
 
+  // Get body, if no body do nothing
+  const body = await res.json().catch(() => null);
+
   if (!res.ok) {
-    throw new Error("Failed to create food entry");
+    const message =
+      typeof body?.error === "string"
+        ? body.error
+        : "Failed to log food entry.";
+    throw new ApiError(message, res.status);
   }
 
-  return res.json();
+  return body;
 }
 
 export async function deleteFood(id: number): Promise<void> {

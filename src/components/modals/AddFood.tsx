@@ -2,7 +2,7 @@ import type { NewFood, Food, Micro, FoodCategory } from "../../types";
 import styles from "./modal.module.css";
 
 import { useState } from "react";
-import { createFood, updateFood } from "../../services/api";
+import { createFood, updateFood, ApiError } from "../../services/api";
 
 const CATEGORY_LABELS: Record<FoodCategory, string> = {
   DAIRY: "Dairy",
@@ -164,9 +164,11 @@ export function AddFood({
       onAdd(savedFood);
       onClose();
     } catch (err) {
-      console.error(err);
       setErrors({
-        submit: `Couldn't ${mode === "edit" ? "update" : "save"} this food. Try again.`,
+        submit:
+          err instanceof ApiError
+            ? err.message
+            : `Couldn't ${mode === "edit" ? "update" : "save"} this food. Try again.`,
       });
     } finally {
       setSubmitting(false);
