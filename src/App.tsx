@@ -55,11 +55,11 @@ export default function App() {
     () =>
       log.reduce(
         (acc, entry) => ({
-          calories: acc.calories + entry.calories * entry.servings,
-          protein: acc.protein + entry.protein * entry.servings,
-          carbs: acc.carbs + entry.carbs * entry.servings,
-          fat: acc.fat + entry.fat * entry.servings,
-          fiber: acc.fiber + entry.fiber * entry.servings,
+          calories: acc.calories + entry.calories,
+          protein: acc.protein + entry.protein,
+          carbs: acc.carbs + entry.carbs,
+          fat: acc.fat + entry.fat,
+          fiber: acc.fiber + entry.fiber,
         }),
         { calories: 0, protein: 0, carbs: 0, fat: 0, fiber: 0 },
       ),

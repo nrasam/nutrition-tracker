@@ -116,11 +116,11 @@ export default function TodayLog({
       ) : (
         <div className={styles.logList}>
           {[...log].reverse().map((e) => {
-            const cal = Math.round(e.calories * e.servings);
-            const pro = Math.round(e.protein * e.servings * 10) / 10;
-            const carbs = Math.round(e.carbs * e.servings * 10) / 10;
-            const fat = Math.round(e.fat * e.servings * 10) / 10;
-            const fiber = Math.round(e.fiber * e.servings * 10) / 10;
+            const cal = Math.round(e.calories);
+            const pro = Math.round(e.protein);
+            const carbs = Math.round(e.carbs);
+            const fat = Math.round(e.fat);
+            const fiber = Math.round(e.fiber);
             return (
               <div key={e.id} className={styles.logEntry}>
                 <span className={styles.logTime}>
