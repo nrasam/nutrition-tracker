@@ -17,6 +17,7 @@ const CATEGORY_LABELS: Record<FoodCategory, string> = {
   VEGETABLES: "Vegetables",
   DRINKS: "Drinks",
   SUPPLEMENT: "Supplements",
+  SWEETS: "Sweets",
 };
 
 const EMPTY_FOOD: NewFood = {
