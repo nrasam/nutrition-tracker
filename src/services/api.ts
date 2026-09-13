@@ -81,7 +81,7 @@ export async function createFood(newFood: NewFood): Promise<Food> {
     throw new ApiError(message, res.status);
   }
 
-  return res.json();
+  return body;
 }
 
 export async function createFoodEntry(

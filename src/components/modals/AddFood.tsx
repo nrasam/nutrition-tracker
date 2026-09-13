@@ -164,6 +164,7 @@ export function AddFood({
       onAdd(savedFood);
       onClose();
     } catch (err) {
+      console.log(err);
       setErrors({
         submit:
           err instanceof ApiError
