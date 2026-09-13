@@ -10,7 +10,8 @@ export type FoodCategory =
   | "POULTRY"
   | "RED_MEAT"
   | "VEGETABLES"
-  | "DRINKS";
+  | "DRINKS"
+  | "SUPPLEMENT";
 
 export interface FoodSource {
   food: string;
