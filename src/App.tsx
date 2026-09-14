@@ -72,8 +72,7 @@ export default function App() {
 
     log.forEach((entry) => {
       entry.foodEntryNutrients.forEach((fen) => {
-        total[fen.microId] =
-          (total[fen.microId] ?? 0) + fen.amount * entry.servings;
+        total[fen.microId] = (total[fen.microId] ?? 0) + fen.amount;
       });
     });
     return total;
