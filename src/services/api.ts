@@ -135,11 +135,15 @@ export async function deleteFoodEntry(id: number): Promise<void> {
     },
   });
 
+  const body = await res.json().catch(() => null);
+
   if (!res.ok) {
-    throw new Error("Failed to delete food entry");
+    // In case the body or the error property is null
+    // Otherwise the body should have proper error info
+    throw new Error(body?.error ?? "Failed to delete food entry");
   }
 
-  return res.json();
+  return body;
 }
 
 export async function clearTodaysEntries(): Promise<void> {

@@ -211,7 +211,7 @@ export default function Dashboard({
             <div key={m.name} className={styles.macroCard}>
               <div className={styles.macroName}>{m.name}</div>
               <div className={styles.macroVals}>
-                <span className={styles.macroCur}>{m.cur}</span>
+                <span className={styles.macroCur}>{Math.round(m.cur)}</span>
                 <span className={styles.macroUnit}>{m.unit}</span>
                 <span className={styles.macroGoalTxt}>
                   / {m.goal}

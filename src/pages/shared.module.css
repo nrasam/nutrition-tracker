@@ -19,16 +19,8 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-}
-
-.splitRight.w360 {
-  width: 360px;
-  min-width: 360px;
-}
-
-.splitRight.w400 {
-  width: 400px;
-  min-width: 400px;
+  width: 500px;
+  min-width: 500px;
 }
 
 .pageInner {

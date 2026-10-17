@@ -20,7 +20,13 @@ import Settings from "./pages/settings/Settings";
 import sharedStyles from "./pages/shared.module.css";
 
 import { useLocalStorage } from "./hooks/useLocalStorage";
-import { getFoodEntries, getFoods, getGoals, getMicros } from "./services/api";
+import {
+  deleteFoodEntry,
+  getFoodEntries,
+  getFoods,
+  getGoals,
+  getMicros,
+} from "./services/api";
 
 export default function App() {
   const [foods, setFoods] = useState<Food[]>();
@@ -84,8 +90,17 @@ export default function App() {
     [micros, microTotals],
   );
 
-  function handleClear(id: number) {
-    setLog((prev) => prev.filter((entry) => entry.id !== id));
+  async function handleClear(id: number) {
+    if (!id) {
+      console.error("Can't clear food entry, id is null!");
+    } else {
+      try {
+        await deleteFoodEntry(id);
+        setLog((prev) => prev.filter((entry) => entry.id !== id));
+      } catch (error) {
+        console.error(error);
+      }
+    }
   }
 
   function handleEat(entry: FoodEntry) {
@@ -143,7 +158,13 @@ export default function App() {
           path="foods"
           element={
             foods ? (
-              <Foods foodsList={foods} onEat={handleEat} microList={micros} />
+              <Foods
+                foods={foods}
+                // If prev is undefined (list hasn't loaded) then don't run update
+                setFoods={(update) => setFoods((prev) => prev && update(prev))}
+                onEat={handleEat}
+                microList={micros}
+              />
             ) : (
               <div className={sharedStyles.pageLoading} role="status">
                 Loading Foods...

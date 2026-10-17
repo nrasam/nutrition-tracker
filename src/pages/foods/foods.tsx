@@ -17,15 +17,16 @@ type SortKey =
   | "fiber";
 
 export default function Foods({
-  foodsList,
+  foods,
+  setFoods,
   onEat,
   microList,
 }: {
-  foodsList: Food[];
+  foods: Food[];
+  setFoods: (update: (prev: Food[]) => Food[]) => void;
   onEat: (entry: FoodEntry) => void;
   microList: Micro[];
 }) {
-  const [foods, setFoods] = useState<Food[]>(foodsList);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [stockFilter, setStockFilter] = useState(false);
   const [search, setSearch] = useState("");
@@ -54,8 +55,8 @@ export default function Foods({
           : b.name.localeCompare(a.name);
       } else if (sortBy === "protein %") {
         return sortDir === "asc"
-          ? a.protein / a.calories - b.protein / b.calories
-          : b.protein / b.calories - a.protein / a.calories;
+          ? proteinPct(a) - proteinPct(b)
+          : proteinPct(b) - proteinPct(a);
       } else {
         return sortDir === "asc"
           ? a[sortBy] - b[sortBy]
@@ -103,6 +104,11 @@ export default function Foods({
     } catch (error) {
       console.error(error);
     }
+  }
+
+  // % of a foods calories coming from protein; 0 if no calories
+  function proteinPct(food: Food) {
+    return food.calories > 0 ? (food.protein * 4) / food.calories : 0;
   }
 
   return (
@@ -212,6 +218,9 @@ export default function Foods({
                       style={{ color: "var(--green)" }}
                     >
                       {food.protein}g
+                      {proteinPct(food) > 0
+                        ? " (" + Math.round(proteinPct(food) * 100) + "%)"
+                        : ""}
                     </span>
                     <span className={styles.foodStatLbl}>prot</span>
                   </div>
@@ -272,7 +281,7 @@ export default function Foods({
         </div>
 
         {/* Right side */}
-        <div className={`${sharedStyles.splitRight} ${sharedStyles.w400}`}>
+        <div className={`${sharedStyles.splitRight}`}>
           {/* If selected */}
           {selected ? (
             <>

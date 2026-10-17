@@ -11,11 +11,12 @@ export default function Nutrients({ microList }: { microList: Micro[] }) {
   // Return null instead of undefined if you can't find the nutrient
   const selected = microList.find((micro) => micro.id === selectedId) ?? null;
   // Get greatest amount of micronutrient from the selected nutrient's food sources
-  const maxSource = selected
-    ? Math.max(...selected.foodNutrients.map((s) => s.amount))
-    : 1;
   const nutrientPercent = selected
-    ? Math.round((selected.current / selected.goal) * 100)
+    ? Math.round(
+        (selected.current /
+          (selected.goal > 0 ? selected.goal : (selected.limit ?? 0))) *
+          100,
+      )
     : 0;
 
   const [search, setSearch] = useState("");
@@ -45,6 +46,9 @@ export default function Nutrients({ microList }: { microList: Micro[] }) {
     default:
       nutrients.sort((a, b) => b.current / b.goal - a.current / a.goal);
   }
+
+  // If there is no goal, use limit instead
+  const target = selected?.goal || selected?.limit || 1;
 
   return (
     <div className={sharedStyles.splitLayout}>
@@ -107,7 +111,9 @@ export default function Nutrients({ microList }: { microList: Micro[] }) {
             )}
             {/* one per nutrient */}
             {nutrients.map((micro) => {
-              const p = (micro.current / micro.goal) * 100;
+              const denominator =
+                micro.goal > 0 ? micro.goal : micro.limit || 1;
+              const p = (micro.current / denominator) * 100;
               const color = statusColor(p);
               return (
                 <div
@@ -131,7 +137,7 @@ export default function Nutrients({ microList }: { microList: Micro[] }) {
                       />
                     </div>
                     <span className={styles.microVals}>
-                      {formatMicro(micro.current)} / {formatMicro(micro.goal)}{" "}
+                      {formatMicro(micro.current)} / {formatMicro(denominator)}{" "}
                       {micro.unit}
                     </span>
                   </div>
@@ -142,7 +148,7 @@ export default function Nutrients({ microList }: { microList: Micro[] }) {
         </div>
       </div>
       {/* Right side */}
-      <div className={`${sharedStyles.splitRight} ${sharedStyles.w360}`}>
+      <div className={`${sharedStyles.splitRight}`}>
         {/* If selected */}
         {selected ? (
           <>
@@ -156,13 +162,15 @@ export default function Nutrients({ microList }: { microList: Micro[] }) {
                     <span className={styles.pstatUnit}>{selected.unit}</span>
                   </div>
                 </div>
-                <div className={styles.pstat}>
-                  <div className={styles.pstatLbl}>Goal</div>
-                  <div className={styles.pstatVal}>
-                    {formatMicro(selected.goal)}{" "}
-                    <span className={styles.pstatUnit}>{selected.unit}</span>
+                {selected.goal > 0 && (
+                  <div className={styles.pstat}>
+                    <div className={styles.pstatLbl}>Goal</div>
+                    <div className={styles.pstatVal}>
+                      {formatMicro(selected.goal)}{" "}
+                      <span className={styles.pstatUnit}>{selected.unit}</span>
+                    </div>
                   </div>
-                </div>
+                )}
                 {/* If an upper limit exists*/}
                 {selected.limit && (
                   <div className={styles.pstat}>
@@ -199,25 +207,29 @@ export default function Nutrients({ microList }: { microList: Micro[] }) {
                     color: statusColor(nutrientPercent),
                   }}
                 >
-                  {nutrientPercent}% of goal
+                  {nutrientPercent}%
                 </span>
                 <span
                   style={{
                     color: statusColor(nutrientPercent),
                   }}
                 >
-                  {formatMicro(selected.goal)} {selected.unit}
+                  {formatMicro(
+                    selected.goal > 0 ? selected.goal : (selected.limit ?? 0),
+                  )}{" "}
+                  {selected.unit}
                 </span>
               </div>
             </div>
             {/* Panel body */}
             <div className={styles.panelBody}>
               <div className={styles.panelSecLbl}>
-                Best food sources (per serving, highest first)
+                Top 10 food sources (per serving)
               </div>
               {/* Food sources */}
               {[...selected.foodNutrients]
                 .sort((a, b) => b.amount - a.amount)
+                .slice(0, 10)
                 .map((source, i) => (
                   <div key={i} className={styles.sourceRow}>
                     <span className={styles.srcRank}>#{i + 1}</span>
@@ -229,13 +241,20 @@ export default function Nutrients({ microList }: { microList: Micro[] }) {
                         <div
                           className={styles.srcBarFill}
                           style={{
-                            width: `${(source.amount / maxSource) * 100}%`,
+                            width: `${Math.min((source.amount / target) * 100, 100)}%`,
                           }}
                         />
                       </div>
                     </div>
                     <span className={styles.srcVal}>
-                      {formatMicro(source.food.serving)} {source.food.unit}
+                      {Math.round(
+                        (source.amount /
+                          (selected.goal > 0
+                            ? selected.goal
+                            : (selected.limit ?? 1))) *
+                          100,
+                      )}
+                      %
                     </span>
                   </div>
                 ))}

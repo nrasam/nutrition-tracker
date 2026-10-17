@@ -37,7 +37,7 @@ export default function Layout({
           {/* sidebar logo mark */}
           <div className="sidebar-logo-mark">⬡</div>
           <h1>Nutri-Tracker</h1>
-          <p>v1.0 - daily log</p>
+          <p>v1.1 - daily log</p>
         </div>
         <nav className="sidebar-nav">
           <NavLink
